@@ -22,3 +22,9 @@ select,
 textarea {
     max-width: 280px;
 }
+
+
+#event-form {
+    padding: 12px;
+    overflow-y: auto;
+}

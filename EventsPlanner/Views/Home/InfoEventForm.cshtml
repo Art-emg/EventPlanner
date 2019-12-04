@@ -1,0 +1,18 @@
+﻿
+
+
+<h3>@ViewBag.Event.Name</h3>
+<p style="font-size:11px; color:gray;">ID: @ViewBag.Event.EventId</p>
+<p>@ViewBag.Event.StartDate.ToString("D") - @ViewBag.Event.EndDate.ToString("D") </p>
+<p>@ViewBag.Event.Description</p>
+
+<button type="button" class="btn btn-link"
+        onclick="GetEditEventForm(@ViewBag.Event.EventId)">
+    Изменить
+</button>
+
+<button type="button" class="btn btn-link" 
+        onclick="EventDelete(@ViewBag.Event.EventId);
+                GetListEventForm('@ViewBag.Event.StartDate')" >
+    Удалить
+</button>

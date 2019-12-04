@@ -6,19 +6,18 @@ namespace EventsPlanner.Models
 {
     public class UserEvent
     {
-        [ForeignKey("AspNetUsers"), Required]
-        public string  UserId { get; set; }
+        public ApplicationUser User { get; set; }
+        [ForeignKey("Id")]
+        [Required]
+        public string ApplicationUserId { get; set; }
 
-        [ForeignKey("AspNetUsers"), Required]
-        public string CreatorId { get; set; }
-
-        [ForeignKey("Events"), Required]
-        public int EventId { get; set; }
 
     }
 
     public class UserEventContext : DbContext
     {
+        public UserEventContext() : base("DefaultConnection")
+        {}
         public DbSet<UserEvent> UserEvents { get; set; }
     }
 }

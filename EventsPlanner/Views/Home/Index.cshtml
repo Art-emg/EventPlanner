@@ -1,29 +1,30 @@
 ﻿@{
-   
+
 }
 @section styles{
     @Styles.Render("~/Content/fullcalendar.css")
     @Styles.Render("~/Content/calendar.css")
     @Styles.Render("~/Content/animate.css")
+    @Styles.Render("~/Content/bootstrap-datetimepicker.css")
+
 }
 @section scripts{
 
     @Scripts.Render("~/Scripts/moment.js")
-
     @Scripts.Render("~/Scripts/fullcalendar.js")
-    @Scripts.Render("~/Scripts/main.js")
     @Scripts.Render("~/Scripts/locale/ru.js")
-
+    @Scripts.Render("~/Scripts/bootstrap-datetimepicker.js")
+    @Scripts.Render("~/Scripts/main-page.js")
 }
 
 
-<div class="row" style="margin:40px;">
+<div class="row" style="margin:40px 0px;">
     <div class="col-md-8">
         <div id="calendar"></div>
     </div>
     <div class="col-md-4">
         <div id="event-form" style="border:1px solid; height:500px; position:inherit">
-           
+
         </div>
 
     </div>
