@@ -6,23 +6,16 @@ calendar.fullCalendar({
 
     selectable: true,
     eventLimit: true,
-    eventLimit: 2,
+    eventLimit: 4,
     displayEventTime: false,
 
     customButtons: {
         refreshButton: {
-            text: 'Обновить',
+            text: '↻',
             click: function () {
                 calendar.fullCalendar('refetchEvents');
             }
         }
-    },
-    bootstrapFontAwesome: {
-        close: 'fa-times',
-        prev: 'fa-chevron-left',
-        next: 'fa-chevron-right',
-        prevYear: 'fa-angle-double-left',
-        refreshButton: 'fa-angle-double-right'
     },
         header: {
             left: 'prev,next,today refreshButton',
@@ -52,13 +45,16 @@ calendar.fullCalendar({
 
         eventClick: function (event, jsEvent, view) {
             GetInfoEventForm(event.id);
-    },
+        },
 
-        //eventResize: function (eventResizeInfo) {
-        //    alert(eventResizeInfo.id + ' : ' + eventResizeInfo.start.format() + " - " + eventResizeInfo.end.subtract(1).format())
-        //},
+        eventResize: function (eventResizeInfo) {
+            alert(eventResizeInfo.id + ' : ' + eventResizeInfo.start.format() + " - " + eventResizeInfo.end.subtract(1).format())
+        },
 
     eventDrop: function (event) {
+        if (event.end != null) {
+            event.end = event.end.subtract(1, 'day');
+        }
         EditEvent(event);
             //if (event.end != null)
             //    alert(event.id + ' ' + event.title + " " + event.start.format() + " - " + event.end.format());
@@ -68,8 +64,13 @@ calendar.fullCalendar({
 
         eventSources: [
             {
-                url: '/Home/GetEvents'
-            }       
+                url: '/Home/GetCreatedEvents'
+            },
+            {
+                url: '/Home/GetInvitedEvents',
+                color: '#4caf50',
+                editable:false
+            }    
         ]
 
         //events:[{ allDay: true,name: "dfdfdsf",title: "Событие один descr",start: "12/27/2019",id: 12,color: 'red'},{allDay: true, title: "Событие длинное", start: "12/15/2019", end: "12/18/2019", id: 15}]
@@ -78,8 +79,10 @@ calendar.fullCalendar({
 
 
 
+var loader_div = '<div class="loader-div"><div class="loader"></div></div>'
 
 function GetInfoEventForm(eventId) {
+    $('#event-form').html(loader_div);
     $.ajax({
         url: "/Home/InfoEventForm/" + eventId,
         success: function (data) {
@@ -89,6 +92,7 @@ function GetInfoEventForm(eventId) {
 }
 
 function GetEditEventForm(eventId) {
+    $('#event-form').html(loader_div);
     $.ajax({
         url: "/Home/EditEventForm/" + eventId,
         success: function (data) {
@@ -98,6 +102,7 @@ function GetEditEventForm(eventId) {
 }
 
 function GetAddEventFormStartDate(startDate) {
+    $('#event-form').html(loader_div);
     $.ajax({
         url: "/Home/AddEventFormStartDate?startDate=" + startDate,
         success: function (data) {
@@ -107,6 +112,7 @@ function GetAddEventFormStartDate(startDate) {
 }
 
 function GetAddEventFormStartEndDate(startDate, endDate) {
+    $('#event-form').html(loader_div);
     $.ajax({
         url: "/Home/AddEventFormStartEndDate?startDate=" + startDate + "&endDate=" + endDate,
         success: function (data) {
@@ -116,6 +122,7 @@ function GetAddEventFormStartEndDate(startDate, endDate) {
 }
 
 function GetListEventForm(date) {
+    $('#event-form').html(loader_div);   
     $.ajax({
         url: "/Home/ListEventsForm?date=" + date,
         success: function (data) {
@@ -134,21 +141,14 @@ function EventDelete(eventId) {
 }
 
 function AddEventEndEditCalendar(form) {
-    var url = "/Home/AddEvent";
+    $('#event-form').html(loader_div);
 
+    var url = "/Home/AddEvent";
     $.ajax({
         type: "POST",
         url: url,
         data: form.serialize(),
         success: function (data) {
-            //var arr = form.serializeArray();
-            //var event = {
-            //    id: data,
-            //    title: arr[0].value,
-            //    start: moment(arr[1].value, 'DD.MM.YYYY').format(),
-            //    end: moment(arr[2].value, 'DD.MM.YYYY').format()
-            //};
-            ////$('#calendar').fullCalendar('renderEvent', event, true);
 
             calendar.fullCalendar('refetchEvents');
             GetInfoEventForm(data);
@@ -157,7 +157,9 @@ function AddEventEndEditCalendar(form) {
 }
 function EditEvent(event) {
     var url = "/Home/EditEvent";
-   
+    if (event.end == null)
+        event.end = event.start;
+
     $.ajax({
         type: "POST",
         url: url,
@@ -174,26 +176,39 @@ function EditEvent(event) {
     });
 }
 function EditEventEndEditCalendar(form) {
-    var url = "/Home/EditEvent";
+    $('#event-form').html(loader_div);
 
+    var url = "/Home/EditEvent";
     $.ajax({
         type: "POST",
         url: url,
         data: form.serialize(),
         success: function (data) {
-            //var arr = form.serializeArray();     
-            //event = calendar.fullCalendar('clientEvents', data)[0];
-            //event.title = arr[1].value;
-            //event.start = moment(arr[2].value, 'DD.MM.YYYY').format();
-            //event.end = moment(arr[3].value, 'DD.MM.YYYY').format();
-
-            //$('#calendar').fullCalendar('updateEvent', event, true);
             calendar.fullCalendar('refetchEvents');
             GetInfoEventForm(data);
         }
     });
 }
+
 function AddEndShowEvent(eventId) {
     calendar.addEvent()
 }
 
+///////////////////
+
+function checkValidDatePicker() {
+    if ($("#startEvent").val() != '') {
+        $('#datetimepickerEnd').data("DateTimePicker").minDate($("#startEvent").val());
+    }
+
+    if ($("#endEvent").val() != '') {
+        buffer = $("#startEvent").val();
+        $('#datetimepickerStart').data("DateTimePicker").maxDate($("#endEvent").val());
+        buffer = $("#startEvent").val(buffer);
+
+    }
+}
+
+function debug(e) {
+   
+}

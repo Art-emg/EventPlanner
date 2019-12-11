@@ -1,18 +1,34 @@
-﻿
+﻿<div class="animated fadeIn">
+    <h3>@ViewBag.Event.Name</h3>
+    <p style="font-size:11px; color:gray;">
+        ID: @ViewBag.Event.EventId
+        Создал: @ViewBag.CreatorUserName
+    </p>
+    <p>@ViewBag.Event.StartDate.ToString("D") - @ViewBag.Event.EndDate.ToString("D") </p>
+    <p>@ViewBag.Event.Description</p>
 
+    @if(ViewBag.InvitedUserNames.Count>0)
+    {
+        <h5>Приглашенные пользователи:</h5>
+        <ul>
+            @foreach (string username in ViewBag.InvitedUserNames)
+            {
+                <li>@username</li>
+            }
+        </ul>
+    }
 
-<h3>@ViewBag.Event.Name</h3>
-<p style="font-size:11px; color:gray;">ID: @ViewBag.Event.EventId</p>
-<p>@ViewBag.Event.StartDate.ToString("D") - @ViewBag.Event.EndDate.ToString("D") </p>
-<p>@ViewBag.Event.Description</p>
-
-<button type="button" class="btn btn-link"
-        onclick="GetEditEventForm(@ViewBag.Event.EventId)">
-    Изменить
-</button>
-
-<button type="button" class="btn btn-link" 
-        onclick="EventDelete(@ViewBag.Event.EventId);
-                GetListEventForm('@ViewBag.Event.StartDate')" >
-    Удалить
-</button>
+    <hr>
+    @if (ViewBag.CurrentUser != null)
+    {
+        <button type="button" class="btn btn-primary" 
+                onclick="GetEditEventForm(@ViewBag.Event.EventId)">
+            Изменить
+        </button>
+    }
+    <button type="button" class="btn btn-danger" style="float:right;margin-right:30px;"
+            onclick="EventDelete(@ViewBag.Event.EventId);
+                GetListEventForm('@ViewBag.Event.StartDate')">
+        Удалить
+    </button>
+</div>

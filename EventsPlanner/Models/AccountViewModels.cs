@@ -46,7 +46,7 @@ namespace EventsPlanner.Models
         public string Email { get; set; }
     }
 
-    public class LoginViewModel
+    public class LoginViewModel 
     {
         [Required]
         [Display(Name = "Имя пользователя")]

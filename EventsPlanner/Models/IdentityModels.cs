@@ -17,6 +17,8 @@ namespace EventsPlanner.Models
             // Здесь добавьте утверждения пsользователя
             return userIdentity;
         }
+
+        //public virtual ICollection<UserEvent> UserEvent { get; set; }
     }
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
@@ -30,5 +32,7 @@ namespace EventsPlanner.Models
         {
             return new ApplicationDbContext();
         }
+
+
     }
 }

@@ -1,97 +1,188 @@
-﻿
-    <form action="/Home/AddEvent" method="post" id="edit-form">
+﻿    <form action="/Home/AddEvent" method="post" id="edit-form" class="animated fadeIn">
 
-        <div class="form-group">
-            @if (ViewBag.EventId != null)
-            {
+    <div class="form-group">
+        @if (ViewBag.EventId != null)
+        {
 
-                <input type="hidden" name="EventId" value="@ViewBag.EventId" />
-            }
+            <input type="hidden" name="EventId" value="@ViewBag.EventId" />
+        }
 
-            <label for="eventName">Название</label>
-            <input name="Name" type="text" class="form-control" id="eventName" placeholder="Введите название"
-                   value="@if (ViewBag.EventName != null)
+        <label for="eventName">Название</label>
+        <input name="Name" type="text" class="form-control" id="eventName" placeholder="Введите название"
+               value="@if (ViewBag.EventName != null)
                        {
                            @ViewBag.EventName
-                       }" />
-        </div>
+                       }" required />
+    </div>
 
-        <div class="form-group">
-            <label for="datetimepickerStart">Начало</label>
-            <div class='input-group date' id='datetimepickerStart'>
-                <input name="StartDate" type='text' class="form-control" id="startEvent" value="@ViewBag.EventStartDate" />
-                <span class="input-group-addon">
-                    <span class="glyphicon glyphicon-calendar"></span>
-                </span>
-            </div>
+    <div class="form-group">
+        <label for="datetimepickerStart">Начало</label>
+        <div class='input-group date' id='datetimepickerStart'>
+            <input name="StartDate" type='text' class="form-control" id="startEvent" value="@ViewBag.EventStartDate" required />
+            <span class="input-group-addon">
+                <span class="glyphicon glyphicon-calendar"></span>
+            </span>
         </div>
-        <div class="form-group form-check">
-            <input type="checkbox" class="form-check-input" id="checkOneDay">
-            <label class="form-check-label" for="exampleCheck1">Один день</label>
-        </div>
-        <div class="form-group">
-            <label for="datetimepickerEnd">Конец</label>
-            <div class='input-group date' id='datetimepickerEnd'>
-                <input id="endEvent" name="EndDate" type='text' class="form-control"
-                       value="@if (ViewBag.EventEndDate != null)
+    </div>
+    <div class="form-group">
+        <label for="datetimepickerEnd">Конец</label>
+        <div class='input-group date' id='datetimepickerEnd'>
+            <input id="endEvent" name="EndDate" type='text' class="form-control"
+                   value="@if (ViewBag.EventEndDate != null)
                        {
                            @ViewBag.EventEndDate
-                       }" />
+                       }" required />
 
-                <span class="input-group-addon">
-                    <span class="glyphicon glyphicon-calendar"></span>
-                </span>
-            </div>
+            <span class="input-group-addon">
+                <span class="glyphicon glyphicon-calendar"></span>
+            </span>
         </div>
-        <div class="form-group">
-            <label for="descrEvent">Описание</label>
-            <textarea name="Description" type="text" class="form-control" id="descrEvent" placeholder="Введите описание">
+    </div>
+    <div class="form-group">
+        <label for="descrEvent">Описание</label>
+        <textarea name="Description" type="text" class="form-control" id="descrEvent" placeholder="Введите описание">
                   @if (ViewBag.EventDescr != null)
                        {
                            @ViewBag.EventDescr
                        }</textarea>
+    </div>
+    @if (ViewBag.IsEditForm != null && ViewBag.IsEditForm == true)
+    {  }
+    else
+    {
+    <div class="frm-group">
+
+        <div class="dropdown" style="display:inline-block;">
+            <button class="btn btn-xs btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                <i class="glyphicon glyphicon-plus"></i>
+            </button>
+            <ul class="dropdown-menu scrollable-dropdown">
+                <input class="form-control" id="inputUserName" type="text" placeholder="Имя пользователя" />
+                @if (ViewBag.Usernames != null)
+                {
+
+                    foreach (string userName in ViewBag.Usernames)
+                    {
+                        <li style="cursor:pointer"><a class="dropdown-item">@userName</a></li>
+                    }
+
+                }
+
+            </ul>
+        </div>
+        <label>Приглашенные пользватели </label>
+        <input type="hidden" name="InvitedUsers" id="invited-users" />
+        <div id="invited-users">
+            <ul class="list-group" id="invited-users-list">
+            </ul>
         </div>
 
-        <button type="submit" class="btn btn-success">Добавить</button>
-    </form>
+        <div>
+            <ul>
+            </ul>
+        </div>
+    </div>
+    }
+
+
+
+
+    <hr>
+
+    <button type="submit" class="btn btn-success">
+
+        @if (ViewBag.IsEditForm != null && ViewBag.IsEditForm == true)
+        {
+            <Text>Сохранить</Text>
+        }
+        else
+        {
+            <Text>Добавить</Text>
+        }
+    </button>
+
+    @if (ViewBag.IsEditForm != null && ViewBag.IsEditForm == true)
+    {
+        <button type="button" class="btn btn-default" style="float:right;margin-right:30px;" onclick="GetInfoEventForm(@ViewBag.EventId)">Отмена</button>
+    }
+</form>
 
 
            
 
     <script type="text/javascript">
-    $(function () {
-        $("#edit-form").submit(function (e) {
-            e.preventDefault();
 
-            @if(ViewBag.IsEditForm != null && ViewBag.IsEditForm == true)
-            {
-                <Text> EditEventEndEditCalendar($(this));</Text>
-            }
-            else
-            {
-               <Text> AddEventEndEditCalendar($(this));</Text>
-            }
+        var invitedUsers = [];
+
+        delButton = '<button type = "button" class="btn btn-default btn-xs pull-right remove-item" onclick="$(this).parent().remove()"><span class="glyphicon glyphicon-remove"></span></button>'
+
+        $(function () {
+
+            $("#inputUserName").on("keyup", function() {
+                var value = $(this).val().toLowerCase();
+                $(".dropdown-menu li").filter(function() {
+                  $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+              });
+
+
+            $("#edit-form").submit(function (e) {
+                e.preventDefault();
+
+                list_items = $("#invited-users-list > li");
+                    var users =[];
+                    if (list_items.length != 0) {
+                        $.each(list_items, function (index, value) {
+                            users.push(value.innerText)
+                        })
+                }
+                $('#invited-users').val(users);
+                    
+
+                   
+                @if(ViewBag.IsEditForm != null && ViewBag.IsEditForm == true)
+                {
+                    <Text> EditEventEndEditCalendar($(this));</Text>
+                }
+                else
+                {
+                   <Text> AddEventEndEditCalendar($(this));</Text>
+                }
+
+            });
+
+        
+
+            $('#datetimepickerStart').datetimepicker(
+                { format : 'L'  }
+            );
+            $('#datetimepickerEnd').datetimepicker({
+                           format : 'L'
+            });
+
+            checkValidDatePicker();
+
+            $("#datetimepickerStart").on("dp.change", function (e) {
+                $('#datetimepickerEnd').data("DateTimePicker").minDate(e.date);
+                           });
+            $("#datetimepickerEnd").on("dp.change", function (e) {
+                $('#datetimepickerStart').data("DateTimePicker").maxDate(e.date);
+            });
 
         });
 
+        $('.dropdown-item').on('click', function (e) {
+            list_items = $("#invited-users-list > li");
+            var users =[];
+            if (list_items.length != 0) {
+                $.each(list_items, function (index, value) {
+                    users.push(value.innerText)
+                })
+            }
 
-        $('#datetimepickerStart').datetimepicker(
-            { format : 'L'  }
-        );
-        $('#datetimepickerEnd').datetimepicker({
-                       format : 'L',
-            useCurrent: false
+            if (users.indexOf(e.target.innerText) == -1)
+                $("#invited-users-list").append("<li class='list-group-item' >" + e.target.innerText + delButton + "</li>");
         });
-
-
-
-        $("#datetimepickerStart").on("dp.change", function (e) {
-            $('#datetimepickerEnd').data("DateTimePicker").minDate(e.date);
-                       });
-        $("#datetimepickerEnd").on("dp.change", function (e) {
-            $('#datetimepickerStart').data("DateTimePicker").maxDate(e.date);
-                       });
-    });
-
+        
 
     </script>

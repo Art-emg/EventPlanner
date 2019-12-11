@@ -3,7 +3,7 @@
 }
 @section styles{
     @Styles.Render("~/Content/fullcalendar.css")
-    @Styles.Render("~/Content/calendar.css")
+    @Styles.Render("~/Content/main-page.css")
     @Styles.Render("~/Content/animate.css")
     @Styles.Render("~/Content/bootstrap-datetimepicker.css")
 
@@ -18,13 +18,16 @@
 }
 
 
-<div class="row" style="margin:40px 0px;">
+<div class="row " style="margin:40px 0px;">
     <div class="col-md-8">
-        <div id="calendar"></div>
+        <div id="calendar" class="animated fadeInLeftBig"></div>
     </div>
     <div class="col-md-4">
-        <div id="event-form" style="border:1px solid; height:500px; position:inherit">
-
+        <div id="event-form">
+            <span style="font-size:24px; font-weight:100  !important">
+                <small style="color:#b8b8b8">Выбирете день или событие на календаре.</small>
+            </span>
+            @*<div class="loader"></div>*@
         </div>
 
     </div>

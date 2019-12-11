@@ -1,0 +1,66 @@
+﻿#calendar .fc-today {
+    background-color: #fff8d1;
+    border-top: solid 1px #d1d1d1;
+}
+
+
+/* F O R M */
+
+#event-form {
+    box-shadow: 2px 2px 5px 5px rgba(0, 0, 0, 0.1);
+    margin-top: 52px;
+    padding: 12px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    min-height: 540px;
+}
+
+    #event-form input:invalid {
+        border: 1px solid #ff471a;
+    }
+
+    #event-form input:valid {
+        /*border: 1px solid #66ff1a;*/
+    }
+
+.scrollable-dropdown {
+    height: auto;
+    max-height: 170px;
+    overflow-x: hidden;
+}
+
+.loader {
+    border: 16px solid #f3f3f3; /* Light grey */
+    border-top: 16px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    animation: spin 2s linear infinite;
+    margin: auto;
+    margin-top: 150px;
+}
+
+.loader-div {
+    animation: show 2s 1;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+
+@keyframes show {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}

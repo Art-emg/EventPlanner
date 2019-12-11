@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
@@ -6,9 +7,10 @@ using Newtonsoft.Json;
 
 namespace EventsPlanner.Models
 {
-    [Table("Events")]
+
     public class Event
     {
+
         [JsonProperty(PropertyName = "id")]
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int EventId { get; set; }
@@ -22,11 +24,12 @@ namespace EventsPlanner.Models
         public DateTime StartDate { get; set; }
 
         [JsonProperty(PropertyName = "end")]
-        public DateTime EndDate { get; set; }
+        public DateTime EndDate
+        { get; set; }
 
         public string Description { get; set; }
-
-
+         [JsonIgnore]
+        public List<UserEvent> UserEvents { get; set; }
     }
 
     public class EventContext : DbContext

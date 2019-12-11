@@ -1,29 +1,44 @@
-﻿<h4>
-    @ViewBag.Date.ToString("D")
-    <a class="btn-sm btn-info" style="margin-left:20px; cursor: pointer" onclick="GetAddEventFormStartDate('@ViewBag.Date.ToString("d")');">
-        <i class="glyphicon glyphicon-plus"></i>
-    </a>
-</h4>    
+﻿
+<div class="animated fadeIn">
+    <h4>
+        @ViewBag.Date.ToString("D")
+        <a class="btn-sm btn-info" style="margin-left:20px; cursor: pointer" onclick="GetAddEventFormStartDate('@ViewBag.Date.ToString("d")');">
+            <i class="glyphicon glyphicon-plus"></i>
+        </a>
+    </h4>
 
-
-@{
     <ul class="list-group">
-    @foreach (var ev in ViewBag.Events)
-    {
-        <li class="list-group-item" style="cursor:pointer;">
-            @ev.Name <span style="color:lightslategray">   ID: @ev.EventId</span>
 
-            <button type="button" class="btn-xs btn-link" 
-                    onclick="GetEditEventForm(@ev.EventId)">
-                Изменить
-            </button>
-            <button type="button" class="btn-xs btn-link" 
+        @foreach (var ev in ViewBag.CreatedEvents)
+        {
+        <li class="list-group-item">
+            <span style="cursor:pointer;" onclick="GetInfoEventForm(@ev.EventId)">
+                @ev.Name <span style="color:lightslategray">   ID: @ev.EventId</span>
+            </span>
+            <button type="button" class="btn-xs btn-link" style="float:right;
                     onclick="EventDelete(@ev.EventId);$(this).closest('li').remove()">
                 Удалить
             </button>
+            <button type="button" class="btn-xs btn-link" style="float:right;
+                    onclick="GetEditEventForm(@ev.EventId)">
+                Изменить
+            </button>
+
 
         </li>
-    }
+        }
+        @foreach (var ev in ViewBag.InvitedEvents)
+        {
+            <li class="list-group-item">
+                <span style="cursor:pointer;" onclick="GetInfoEventForm(@ev.EventId)">
+                    @ev.Name <span style="color:lightslategray">   ID: @ev.EventId</span>
+                </span>
+                <button type="button" class="btn-xs btn-link" style="float:right;"
+                        onclick="EventDelete(@ev.EventId);$(this).closest('li').remove()">
+                    Удалить
+                </button>
+
+            </li>
+        }
     </ul>
-}
-    
+</div>
