@@ -30,9 +30,8 @@
                 @Html.ActionLink("EventsPlanner", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Главная", "Index", "Home")</li>
-                </ul>
+
+
                 @Html.Partial("_LoginPartial")
             </div>
         </div>
@@ -41,14 +40,23 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - EventsPlanner 
-            by @Html.Raw("@")<a href="https://github.com/art-emg">art_emg</a>
+            <p class="form-inline" style="display:inline">
+                &copy; @DateTime.Now.Year - EventsPlanner
+                by @Html.Raw("@")<a href="https://github.com/art-emg">art_emg</a>
             </p>
+            <div class="form-check pull-right form-inline" style="display:inline">
+                <input class="form-check-input" type="checkbox" value="" id="darkthene-checkbox">
+                <span class="text-muted" for="darkthene-checkbox">
+                    Темная тема
+                </span>
+            </div>
         </footer>
     </div>
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
+    @Scripts.Render("~/Scripts/Site.js")
+
 </body>
 </html>

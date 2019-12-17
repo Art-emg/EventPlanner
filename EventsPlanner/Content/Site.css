@@ -2,7 +2,10 @@
     padding-top: 50px;
     padding-bottom: 20px;
 }
-
+.dark-theme {
+    background-color: #333333;
+    color: #9d9c9b;
+}
 /* Set padding to keep content from hitting the edges */
 .body-content {
     padding-left: 15px;

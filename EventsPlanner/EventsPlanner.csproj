@@ -453,6 +453,7 @@
     <Content Include="Views\Home\InfoEventForm.cshtml" />
     <Content Include="Views\Home\ListEventsForm.cshtml" />
     <Content Include="Views\Home\EditEventForm.cshtml" />
+    <Content Include="Views\Shared\ClassDiagram.cd" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

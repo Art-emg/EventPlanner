@@ -154,10 +154,18 @@
         
 
             $('#datetimepickerStart').datetimepicker(
-                { format : 'L'  }
+                {
+                    format: 'L',
+                    minDate: '08.04.1999',
+                    maxDate: '08.04.2099'
+                }
             );
             $('#datetimepickerEnd').datetimepicker({
-                           format : 'L'
+                format: 'L',
+                minDate: '08.04.1999',
+                    maxDate: '08.04.2099'
+
+
             });
 
             checkValidDatePicker();
