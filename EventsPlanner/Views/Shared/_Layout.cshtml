@@ -30,8 +30,11 @@
                 @Html.ActionLink("EventsPlanner", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
-
-
+                <ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("Главная", "Index", "Home")</li>
+                    <li>@Html.ActionLink("Все события", "Events", "Admin")</li>
+                    <li>@Html.ActionLink("Все пользователи", "Users", "Admin")</li>
+                </ul>
                 @Html.Partial("_LoginPartial")
             </div>
         </div>

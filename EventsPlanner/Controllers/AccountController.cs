@@ -151,7 +151,10 @@ namespace EventsPlanner.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.UserName, Email = model.Email };
+                var user = new ApplicationUser { UserName = model.UserName,
+                                                 Email = model.Email, 
+                                                 LockoutEnabled = false, 
+                                                 LockoutEndDateUtc = DateTime.Parse("31.12.2099 0:00:00") };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {

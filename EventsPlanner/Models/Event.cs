@@ -17,16 +17,20 @@ namespace EventsPlanner.Models
 
         [JsonProperty(PropertyName = "title")]
         [Required]
+        [Display(Name = "Название")]
         public string Name { get; set; }
 
         [JsonProperty(PropertyName = "start")]
         [DataType("DateTime")]
+        [Display(Name = "Начало")]
         public DateTime StartDate { get; set; }
 
         [JsonProperty(PropertyName = "end")]
+        [Display(Name = "Конец")]
         public DateTime EndDate
         { get; set; }
 
+        [Display(Name = "Описание")]
         public string Description { get; set; }
          [JsonIgnore]
         public List<UserEvent> UserEvents { get; set; }

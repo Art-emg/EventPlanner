@@ -53,7 +53,7 @@ namespace EventsPlanner
             // Настройка логики проверки паролей
             manager.PasswordValidator = new PasswordValidator
             {
-                RequiredLength = 6,
+                //RequiredLength = 6,
                 //RequireNonLetterOrDigit = true,
                 //RequireDigit = true,
                 //RequireLowercase = true,
@@ -61,7 +61,7 @@ namespace EventsPlanner
             };
 
             // Настройка параметров блокировки по умолчанию
-            manager.UserLockoutEnabledByDefault = true;
+            manager.UserLockoutEnabledByDefault = false;
             manager.DefaultAccountLockoutTimeSpan = TimeSpan.FromMinutes(5);
             manager.MaxFailedAccessAttemptsBeforeLockout = 5;
 

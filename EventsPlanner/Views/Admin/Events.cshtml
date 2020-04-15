@@ -1,0 +1,83 @@
+﻿@model IEnumerable<EventsPlanner.Models.Event>
+
+@{
+    ViewBag.Title = "События";
+}
+
+@section styles{
+    @Styles.Render("~/Content/event-form.css")
+    @Styles.Render("~/Content/animate.css")
+    @Styles.Render("~/Content/bootstrap-datetimepicker.css")
+
+}
+@section scripts{
+
+    @Scripts.Render("~/Scripts/moment.js")
+    @Scripts.Render("~/Scripts/events-page.js")
+    @Scripts.Render("~/Scripts/bootstrap-datetimepicker.js")
+}
+
+
+<h3>События</h3>
+<div class="row " style="margin:30px 0px; min-height:560px">
+    <div class="col-md-8">
+
+        <table class="table">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.StartDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.EndDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Description)
+                </th>
+                <th></th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @item.Name
+                    </td>
+                    <td>
+                        @item.StartDate
+                    </td>
+                    <td>
+                        @item.EndDate
+                    </td>
+                    <td>
+                        @item.Description
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-link"
+                                onclick="alert('aa')">
+                            Удалить
+                        </button>
+                        <button type="button" class="btn btn-link"
+                                onclick="GetInfoEventForm(@item.EventId)">
+                            Показать
+                        </button>
+
+                    </td>
+                </tr>
+            }
+
+        </table>
+
+    </div>
+    <div class="col-md-4">
+        <div id="event-form" style="margin-top: 0px !important; position:fixed; width:350px">
+            <span style="font-size:24px; font-weight:100  !important">
+                <small style="color:#b8b8b8">Выбирете событие.</small>
+            </span>
+
+        </div>
+
+    </div>
+</div>

@@ -251,6 +251,25 @@ namespace EventsPlanner.Controllers
             return new HttpStatusCodeResult(HttpStatusCode.OK);
         }
 
-         
+        //WEATHER
+
+        [HttpGet]
+        public ActionResult GetThreeMonthTemperature(int firstMonth, int year)
+        {
+            DateTime date = DateTime.Parse(string.Format("01.{0}.{1}", firstMonth.ToString("d2"), year)).AddMonths(1);
+
+            Dictionary<string, DayTemperature> dict = new Dictionary<string, DayTemperature>();
+            
+
+            foreach (DayTemperature dt in DayTemperature.GetThreeMonthTemperature("minsk", date.Month, date.Year))
+            {
+                dict[dt.date.ToString("yyyy-MM-dd")] = dt;
+            }
+            string threeMonthWeather = JsonConvert.SerializeObject(dict);
+
+            return Content(threeMonthWeather);
+        }
+
+
     }
 }

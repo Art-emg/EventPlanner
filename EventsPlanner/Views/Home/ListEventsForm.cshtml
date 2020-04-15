@@ -15,11 +15,11 @@
             <span style="cursor:pointer;" onclick="GetInfoEventForm(@ev.EventId)">
                 @ev.Name <span style="color:lightslategray">   ID: @ev.EventId</span>
             </span>
-            <button type="button" class="btn-xs btn-link" style="float:right;
+            <button type="button" class="btn-xs btn-link" style="float:right";
                     onclick="EventDelete(@ev.EventId);$(this).closest('li').remove()">
                 Удалить
             </button>
-            <button type="button" class="btn-xs btn-link" style="float:right;
+            <button type="button" class="btn-xs btn-link" style="float:right";
                     onclick="GetEditEventForm(@ev.EventId)">
                 Изменить
             </button>
