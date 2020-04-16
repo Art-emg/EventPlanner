@@ -6,15 +6,15 @@
 
 @section styles{
     @Styles.Render("~/Content/event-form.css")
-    @Styles.Render("~/Content/animate.css")
-    @Styles.Render("~/Content/bootstrap-datetimepicker.css")
+    @Styles.Render("~/Content/Libs/animate.css")
+    @Styles.Render("~/Content/Libs/bootstrap-datetimepicker.css")
 
 }
 @section scripts{
 
-    @Scripts.Render("~/Scripts/moment.js")
+    @Scripts.Render("~/Scripts/Libs/moment.js")
     @Scripts.Render("~/Scripts/events-page.js")
-    @Scripts.Render("~/Scripts/bootstrap-datetimepicker.js")
+    @Scripts.Render("~/Scripts/Libs/bootstrap-datetimepicker.js")
 }
 
 
@@ -22,8 +22,11 @@
 <div class="row " style="margin:30px 0px; min-height:560px">
     <div class="col-md-8">
 
-        <table class="table">
+        <table class="table" id="eventsTable">
             <tr>
+                <th>
+                    ID
+                </th>
                 <th>
                     @Html.DisplayNameFor(model => model.Name)
                 </th>
@@ -41,31 +44,34 @@
 
             @foreach (var item in Model)
             {
-                <tr>
-                    <td>
-                        @item.Name
-                    </td>
-                    <td>
-                        @item.StartDate
-                    </td>
-                    <td>
-                        @item.EndDate
-                    </td>
-                    <td>
-                        @item.Description
-                    </td>
-                    <td>
-                        <button type="button" class="btn btn-link"
-                                onclick="alert('aa')">
-                            Удалить
-                        </button>
-                        <button type="button" class="btn btn-link"
-                                onclick="GetInfoEventForm(@item.EventId)">
-                            Показать
-                        </button>
+        <tr>
+            <td>
+                @item.EventId
+            </td>
+            <td>
+                @item.Name
+            </td>
+            <td>
+                @item.StartDate
+            </td>
+            <td>
+                @item.EndDate
+            </td>
+            <td>
+                @item.Description
+            </td>
+            <td>
+                <button type="button" class="btn btn-link"
+                        onclick="alert('aa')">
+                    Удалить
+                </button>
+                <button type="button" class="btn btn-link"
+                        onclick="GetInfoEventForm(@item.EventId)">
+                    Показать
+                </button>
 
-                    </td>
-                </tr>
+            </td>
+        </tr>
             }
 
         </table>

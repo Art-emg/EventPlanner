@@ -2,34 +2,38 @@
 
 }
 @section styles{
-    @Styles.Render("~/Content/fullcalendar.css")
+    @Styles.Render("~/Content/Libs/fullcalendar.css")
     @Styles.Render("~/Content/main-page.css")
     @Styles.Render("~/Content/event-form.css")
-    @Styles.Render("~/Content/animate.css")
-    @Styles.Render("~/Content/bootstrap-datetimepicker.css")
+    @Styles.Render("~/Content/Libs/animate.css")
+    @Styles.Render("~/Content/Libs/bootstrap-datetimepicker.css")
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
 
 }
 @section scripts{
 
-    @Scripts.Render("~/Scripts/moment.js")
-    @Scripts.Render("~/Scripts/fullcalendar/fullcalendar.js")
-    @Scripts.Render("~/Scripts/fullcalendar/locale/ru.js")
-    @Scripts.Render("~/Scripts/bootstrap-datetimepicker.js")
-    @Scripts.Render("~/Scripts/main-page.js")
+    @Scripts.Render("~/Scripts/Libs/moment.js")
+    @Scripts.Render("~/Scripts/Libs/fullcalendar/fullcalendar.js")
+    @Scripts.Render("~/Scripts/Libs/fullcalendar/locale/ru.js")
+    @Scripts.Render("~/Scripts/Libs/bootstrap-datetimepicker.js")
+    @Scripts.Render("~/Scripts/events-functions.js")
+    @Scripts.Render("~/Scripts/weather-functions.js")
+    @Scripts.Render("~/Scripts/initialize-fullcalendar.js")
+    <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=b83893db-c999-4110-9982-018681aff9d6&lang=ru_RU" type="text/javascript"></script>
 }
 
 
-<div class="row " style="margin:40px 0px;">
-    <div class="col-md-8">
-        <div id="calendar" class="animated fadeInLeftBig"></div>
-    </div>
-    <div class="col-md-4">
-        <div id="event-form">
-            <span style="font-size:24px; font-weight:100  !important">
-                <small style="color:#b8b8b8">Выбирете день или событие на календаре.</small>
-            </span>
-            @*<div class="loader"></div>*@
-        </div>
+            <div class="row " style="margin:40px 0px;">
+                <div class="col-md-8">
+                    <div id="calendar" class="animated fadeInLeftBig"></div>
+                </div>
+                <div class="col-md-4">
+                    <div id="event-form">
+                        <span style="font-size:24px; font-weight:100  !important">
+                            <small style="color:#b8b8b8">Выбирете день или событие на календаре.</small>
+                        </span>
+                    </div>
 
-    </div>
-</div>
+                </div>
+            </div>

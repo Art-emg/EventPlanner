@@ -96,6 +96,8 @@ namespace EventsPlanner.Controllers
             ViewBag.UserNames = UsersContext.Users
                 .Where(p => p.Id != currentUser).ToList().Select(p => p.UserName);
             ViewBag.EventStartDate = startDate;
+            ViewBag.EventEndDate = startDate;
+            ///
             return PartialView("EditEventForm");
         }
 
@@ -122,6 +124,8 @@ namespace EventsPlanner.Controllers
             ViewBag.EventStartDate = ev.StartDate.ToString("d");
             ViewBag.EventEndDate = ev.EndDate.ToString("d");
             ViewBag.EventDescr = ev.Description;
+            ViewBag.EventLatitude = ev.Latitude;
+            ViewBag.EventLongitude = ev.Longitude;
 
             return PartialView();
         }
@@ -225,6 +229,8 @@ namespace EventsPlanner.Controllers
             editEvent.StartDate = ev.StartDate;
             editEvent.EndDate = ev.EndDate;
             editEvent.Description = ev.Description;
+            editEvent.Latitude = ev.Latitude;
+            editEvent.Longitude = ev.Longitude;
 
             eventContext.SaveChanges();
 
@@ -254,14 +260,14 @@ namespace EventsPlanner.Controllers
         //WEATHER
 
         [HttpGet]
-        public ActionResult GetThreeMonthTemperature(int firstMonth, int year)
+        public ActionResult GetThreeMonthTemperature(string city,  int firstMonth, int year)
         {
             DateTime date = DateTime.Parse(string.Format("01.{0}.{1}", firstMonth.ToString("d2"), year)).AddMonths(1);
 
             Dictionary<string, DayTemperature> dict = new Dictionary<string, DayTemperature>();
             
 
-            foreach (DayTemperature dt in DayTemperature.GetThreeMonthTemperature("minsk", date.Month, date.Year))
+            foreach (DayTemperature dt in DayTemperature.GetThreeMonthTemperature(city, date.Month, date.Year))
             {
                 dict[dt.date.ToString("yyyy-MM-dd")] = dt;
             }

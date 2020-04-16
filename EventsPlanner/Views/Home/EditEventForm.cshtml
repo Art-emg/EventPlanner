@@ -46,42 +46,63 @@
                            @ViewBag.EventDescr
                        }</textarea>
     </div>
+
+    <div class="form-group">
+        <a class="btn btn-xs btn-primary openMapSelectLocation" data-fancybox data-modal="true" data-src="#modal" href="javascript:;">
+            <i class="glyphicon glyphicon-plus"></i>
+        </a>
+
+        <div style="display: none;max-width:600px; padding:5px" id="modal">
+            <h3>Выберете местоположение!</h3>
+            <div id="mapSelectLocation" style="width:500px; height:500px;"></div>
+            <p><button data-fancybox-close class="btn btn-success">Добавть</button></p>
+        </div>
+
+        <label for="descrEvent">Местоположение : </label><br>
+        <span id="textEventLocationAddress">...</span>
+        <input type="hidden" name="Latitude" id="latitude-input" />
+        <input type="hidden" name="Longitude" id="longitude-input" />
+
+    </div>
+
+
     @if (ViewBag.IsEditForm != null && ViewBag.IsEditForm == true)
-    {  }
+    { }
     else
     {
-    <div class="frm-group">
+      
+        <div class="form-group">
 
-        <div class="dropdown" style="display:inline-block;">
-            <button class="btn btn-xs btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
-                <i class="glyphicon glyphicon-plus"></i>
-            </button>
-            <ul class="dropdown-menu scrollable-dropdown">
-                <input class="form-control" id="inputUserName" type="text" placeholder="Имя пользователя" />
-                @if (ViewBag.Usernames != null)
-                {
-
-                    foreach (string userName in ViewBag.Usernames)
+            <div class="dropdown" style="display:inline-block;">
+                <button class="btn btn-xs btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                    <i class="glyphicon glyphicon-plus"></i>
+                </button>
+                <ul class="dropdown-menu scrollable-dropdown">
+                    <input class="form-control" id="inputUserName" type="text" placeholder="Имя пользователя" />
+                    @if (ViewBag.Usernames != null)
                     {
-                        <li style="cursor:pointer"><a class="dropdown-item">@userName</a></li>
+
+                        foreach (string userName in ViewBag.Usernames)
+                        {
+                            <li style="cursor:pointer"><a class="dropdown-item">@userName</a></li>
+                        }
+
                     }
 
-                }
+                </ul>
+            </div>
+            <label>Приглашенные пользватели </label>
+            <input type="hidden" name="InvitedUsers" id="invited-users" />
+            <div id="invited-users">
+                <ul class="list-group" id="invited-users-list">
+                </ul>
+            </div>
 
-            </ul>
+            <div>
+                <ul>
+                </ul>
+            </div>
         </div>
-        <label>Приглашенные пользватели </label>
-        <input type="hidden" name="InvitedUsers" id="invited-users" />
-        <div id="invited-users">
-            <ul class="list-group" id="invited-users-list">
-            </ul>
-        </div>
-
-        <div>
-            <ul>
-            </ul>
-        </div>
-    </div>
     }
 
 
@@ -148,7 +169,7 @@
                 {
                    <Text> AddEventEndEditCalendar($(this));</Text>
                 }
-
+                 
             });
 
         
@@ -192,5 +213,113 @@
                 $("#invited-users-list").append("<li class='list-group-item' >" + e.target.innerText + delButton + "</li>");
         });
         
+    //Местоположение fancybox
+
+        $('.openMapSelectLocation').fancybox({
+
+            // Other options like size go here
+            afterShow: function () {
+            }
+        });
+        ymaps.ready(init);
+        
+        function init(){
+            var myPlacemark, myMap = new ymaps.Map("mapSelectLocation", {
+                center: [53.89, 27.56],
+                zoom: 6
+            });
+            @if(ViewBag.EventLatitude != null && ViewBag.EventLongitude != null)
+            { <Text>
+                 myPlacemark = createPlacemark([@ViewBag.EventLatitude, @ViewBag.EventLongitude]);
+                    myMap.geoObjects.add(myPlacemark);
+                    // Слушаем событие окончания перетаскивания на метке.
+                    myPlacemark.events.add('dragend', function () {
+                        getAddress(myPlacemark.geometry.getCoordinates());
+                    });
+                    $('#latitude-input').val(@ViewBag.EventLatitude);              
+                    $('#longitude-input').val(@ViewBag.EventLongitude);
+
+                    ymaps.geocode(myPlacemark.geometry._coordinates).then(function (res) {
+                        var firstGeoObject = res.geoObjects.get(0);
+
+                        var addressString = [
+                               firstGeoObject.getLocalities().length ? firstGeoObject.getLocalities() : firstGeoObject.getAdministrativeAreas(),
+                               firstGeoObject.getThoroughfare() || firstGeoObject.getPremise()
+                            ].filter(Boolean).join(', ');
+
+                        $("#textEventLocationAddress").text(firstGeoObject.getAddressLine());
+
+                        myPlacemark.properties
+                            .set({
+                            iconCaption: addressString,
+                                // В качестве контента балуна задаем строку с адресом объекта.
+                                balloonContent: firstGeoObject.getAddressLine()
+                            });
+                    });
+
+
+
+             </Text>
+            }
+            myMap.events.add('click', function (e) {
+                var coords = e.get('coords');
+
+                // Если метка уже создана – просто передвигаем ее.
+                if (myPlacemark) {
+                    myPlacemark.geometry.setCoordinates(coords);
+                }
+                // Если нет – создаем.
+                else {
+                    myPlacemark = createPlacemark(coords);
+                    myMap.geoObjects.add(myPlacemark);
+                    // Слушаем событие окончания перетаскивания на метке.
+                    myPlacemark.events.add('dragend', function () {
+                        getAddress(myPlacemark.geometry.getCoordinates());
+                    });
+                }
+                $('#latitude-input').val(coords[0]);              
+                $('#longitude-input').val(coords[1]);
+                
+                getAddress(coords);
+            });
+
+
+
+            // Создание метки.
+            function createPlacemark(coords) {
+                return new ymaps.Placemark(coords, {
+                    iconCaption: 'поиск...'
+                }, {
+                    preset: 'islands#violetDotIconWithCaption',
+                    draggable: true
+                });
+            }
+            // Определяем адрес по координатам (обратное геокодирование).
+            function getAddress(coords) {
+                myPlacemark.properties.set('iconCaption', 'поиск...');
+                ymaps.geocode(coords).then(function (res) {
+                    var firstGeoObject = res.geoObjects.get(0);
+                    
+                    $("#textEventLocationAddress").text(firstGeoObject.getAddressLine());
+
+                    myPlacemark.properties
+                        .set({
+                    // Формируем строку с данными об объекте.
+                    iconCaption: [
+                        // Название населенного пункта или вышестоящее административно-территориальное образование.
+                        firstGeoObject.getLocalities().length ? firstGeoObject.getLocalities() : firstGeoObject.getAdministrativeAreas(),
+                        // Получаем путь до топонима, если метод вернул null, запрашиваем наименование здания.
+                        firstGeoObject.getThoroughfare() || firstGeoObject.getPremise()
+                    ].filter(Boolean).join(', '),
+                            // В качестве контента балуна задаем строку с адресом объекта.
+                            balloonContent: firstGeoObject.getAddressLine()
+                        });
+                });
+            }
+
+        }
+    //
+
+
 
     </script>

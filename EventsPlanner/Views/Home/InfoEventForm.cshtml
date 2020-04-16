@@ -5,9 +5,23 @@
         Создал: @ViewBag.CreatorUserName
     </p>
     <p>@ViewBag.Event.StartDate.ToString("D") - @ViewBag.Event.EndDate.ToString("D") </p>
+    @if (ViewBag.Event.Latitude != null && ViewBag.Event.Longitude != null)
+    {
+        <p id="locationInfoString">
+            Местоположение: 
+            
+            <script>
+                ymaps.geocode([@ViewBag.Event.Latitude, @ViewBag.Event.Longitude]).then(function (res) {
+                    var firstGeoObject = res.geoObjects.get(0);
+                    $('#locationInfoString').append(firstGeoObject.getAddressLine());                   
+                });
+            </script>
+        </p>
+    }
+
     <p>@ViewBag.Event.Description</p>
 
-    @if(ViewBag.InvitedUserNames.Count>0)
+    @if (ViewBag.InvitedUserNames.Count > 0)
     {
         <h5>Приглашенные пользователи:</h5>
         <ul>
@@ -21,7 +35,7 @@
     <hr>
     @if (ViewBag.CurrentUser != null)
     {
-        <button type="button" class="btn btn-primary" 
+        <button type="button" class="btn btn-primary"
                 onclick="GetEditEventForm(@ViewBag.Event.EventId)">
             Изменить
         </button>

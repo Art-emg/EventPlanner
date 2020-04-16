@@ -15,13 +15,41 @@ namespace EventsPlanner.Controllers
     {
         EventContext eventContext = new EventContext();
         ApplicationDbContext UsersContext = new ApplicationDbContext();
-
+        UserEventContext userEventContext = new UserEventContext();
 
         #region Events
 
         public ActionResult Events()
         {
             return View(eventContext.Events.ToList());
+        }
+        public ActionResult InfoEventForm(int id)
+        {
+            string currentUser = User.Identity.GetUserId();
+            ViewBag.Event = eventContext.Events.Find(id);
+
+            ViewBag.CurrentUser = true;
+
+
+            string creatorID = userEventContext.UserEvents
+                .Where(ue => ue.EventId == id && ue.UserId == ue.CreatorId)
+                .Select(ue => ue.UserId).FirstOrDefault();
+            string creatorUsername = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(creatorID).UserName;
+
+
+            IEnumerable<string> invitedID = userEventContext.UserEvents
+               .Where(ue => ue.EventId == id && ue.UserId != ue.CreatorId)
+               .Select(ue => ue.UserId).ToList();
+
+            List<string> invitdUsername = new List<string>();
+
+            foreach (string invitedId in invitedID)
+                invitdUsername.Add(System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(invitedId).UserName);
+
+            ViewBag.InvitedUserNames = invitdUsername;
+            ViewBag.CreatorUserName = creatorUsername;
+
+            return PartialView();
         }
 
         #endregion
