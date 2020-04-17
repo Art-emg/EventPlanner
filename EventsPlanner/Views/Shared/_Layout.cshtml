@@ -16,7 +16,7 @@
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
     @RenderSection("styles", required: false)
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
 </head>
 <body>
     <div class="navbar navbar-default navbar-fixed-top">
@@ -32,9 +32,40 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Главная", "Index", "Home")</li>
-                    <li>@Html.ActionLink("Все события", "Events", "Admin")</li>
-                    <li>@Html.ActionLink("Все пользователи", "Users", "Admin")</li>
+                    <li>@Html.ActionLink("Мои события", "")</li>
                 </ul>
+
+                @if (User.IsInRole("Administrator"))
+                {
+                    <ul class="nav navbar-nav" style="background-color:#ffedba">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                               aria-expanded="false">Администратор <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li>@Html.ActionLink("Все события", "Events", "Admin")</li>
+                                <li role="separator" class="divider"></li>
+                                <li>@Html.ActionLink("Все пользователи", "Users", "Admin")</li>
+                            </ul>
+                        </li>
+                    </ul>
+
+
+                }
+                <div class="form-inline">
+                    <a class="btn btn-xs btn-primary openMapSelectLocation" data-fancybox data-modal="true" data-src="#modalCurrentLocation" href="javascript:;">
+                        <i class="glyphicon glyphicon-plus"></i>
+                    </a>
+
+                    <div style="display: none;max-width:600px; padding:5px" id="modalCurrentLocation">
+                        <h3>Ввше местоположение</h3>
+                        <div id="mapSelectCurrentUserLocation" style="width:500px; height:500px;"></div>
+                        <p><button data-fancybox-close class="btn btn-success">Добавть</button></p>
+                    </div>
+
+                    <label>Местоположение : </label>
+                    <span id="textCurrentLocationAddress">...</span>
+
+                </div>
                 @Html.Partial("_LoginPartial")
             </div>
         </div>
@@ -60,6 +91,180 @@
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
     @Scripts.Render("~/Scripts/Site.js")
+    <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=b83893db-c999-4110-9982-018681aff9d6&lang=ru_RU" type="text/javascript"></script>
+    
+    <script type="text/javascript">
+        $('.openMapSelectLocation').fancybox({
+
+            afterShow: function () {
+            }
+        });
+        ymaps.ready(init);
+        var res;
+        function init() {
+
+            var myPlacemark, currentLocationSelectMap = new ymaps.Map("mapSelectCurrentUserLocation", {
+                center: [54.00, 27.00],
+                zoom: 4
+            }, {
+                // Ограничим область карты.
+                restrictMapArea: [[50, 21], [58, 34]]
+            });
+            myPlacemark = createPlacemark([54.00, 27.00]);
+
+            // { ограничить страной
+            ymaps.borders.load('001', {
+                lang: 'ru',
+                quality: 2
+            }).then(function (result) {
+
+                // Создадим многоугольник, который будет скрывать весь мир, кроме заданной страны.
+                var background = new ymaps.Polygon([
+                    [
+                        [85, -179.99],
+                        [85, 179.99],
+                        [-85, 179.99],
+                        [-85, -179.99],
+                        [85, -179.99]
+                    ]
+                ], {}, {
+                    fillColor: '#66666666',
+                    strokeWidth: 0,
+                    // Для того чтобы полигон отобразился на весь мир, нам нужно поменять
+                    // алгоритм пересчета координат геометрии в пиксельные координаты.
+                    coordRendering: 'straightPath'
+                });
+
+                // Найдём страну по её iso коду.
+                var region = result.features.filter(function (feature) { return feature.properties.iso3166 == 'BY'; })[0];
+
+                // Добавим координаты этой страны в полигон, который накрывает весь мир.
+                // В полигоне образуется полость, через которую будет видно заданную страну.
+                var masks = region.geometry.coordinates;
+                masks.forEach(function (mask) {
+                    background.geometry.insert(1, mask);
+                });
+
+                // Добавим многоугольник на карту.
+                currentLocationSelectMap.geoObjects.add(background);
+            })
+            // } ограничить страной
+
+            if (sessionStorage['latitudeLocation'] != null && sessionStorage['longitudeLocation'] != null) {
+                myPlacemark.geometry.setCoordinates([
+                    sessionStorage['latitudeLocation'],
+                    sessionStorage['longitudeLocation']
+                ]);
+                getAddress([
+                    sessionStorage['latitudeLocation'],
+                    sessionStorage['longitudeLocation']
+                ]);
+            }
+            else {
+                ymaps.geolocation.get({
+                    provider: 'browser',
+                    mapStateAutoApply: true
+                }).then(function (result) {
+                    myPlacemark.geometry.setCoordinates(result.geoObjects.position);
+                    getAddress(result.geoObjects.position);
+                    sessionStorage['latitudeLocation'] = result.geoObjects.position[0];
+                    sessionStorage['longitudeLocation'] = result.geoObjects.position[1];
+
+                });
+            }
+
+
+            currentLocationSelectMap.geoObjects.add(myPlacemark);
+
+            myPlacemark.events.add('dragend', function () {
+                getAddress(myPlacemark.geometry.getCoordinates());
+            });
+
+            ymaps.geocode(myPlacemark.geometry._coordinates).then(function (res) {
+                var firstGeoObject = res.geoObjects.get(0);
+
+                var addressString = [
+                    firstGeoObject.getLocalities().length ? firstGeoObject.getLocalities() : firstGeoObject.getAdministrativeAreas(),
+                    firstGeoObject.getThoroughfare() || firstGeoObject.getPremise()
+                ].filter(Boolean).join(', ');
+
+                $("#textCurrentLocationAddress").text(firstGeoObject.getAddressLine());
+
+                myPlacemark.properties
+                    .set({
+                        iconCaption: addressString,
+                        // В качестве контента балуна задаем строку с адресом объекта.
+                        balloonContent: firstGeoObject.getAddressLine()
+                    });
+            });
+
+
+            currentLocationSelectMap.events.add('click', function (e) {
+                var coords = e.get('coords');
+                // Если метка уже создана – просто передвигаем ее.
+                if (myPlacemark) {
+                    myPlacemark.geometry.setCoordinates(coords);
+                }
+                // Если нет – создаем.
+                else {
+                    myPlacemark = createPlacemark(coords);
+                    currentLocationSelectMap.geoObjects.add(myPlacemark);
+                    // Слушаем событие окончания перетаскивания на метке.
+                    myPlacemark.events.add('dragend', function () {
+                        getAddress(myPlacemark.geometry.getCoordinates());
+                    });
+                }
+
+                getAddress(coords);
+            });
+
+
+
+            // Создание метки.
+            function createPlacemark(coords) {
+                return new ymaps.Placemark(coords, {
+                    iconCaption: 'поиск...'
+                }, {
+                    preset: 'islands#violetDotIconWithCaption',
+                    draggable: true
+                });
+            }
+            // Определяем адрес по координатам (обратное геокодирование).
+            function getAddress(coords) {
+                sessionStorage['latitudeLocation'] = coords[0];
+                sessionStorage['longitudeLocation'] = coords[1];
+                myPlacemark.properties.set('iconCaption', 'поиск...');
+                ymaps.geocode(coords).then(function (res) {
+                    var firstGeoObject = res.geoObjects.get(0);
+                    $("#textCurrentLocationAddress").text(firstGeoObject.getAddressLine());
+                    myPlacemark.properties
+                        .set({
+                            // Формируем строку с данными об объекте.
+                            iconCaption: [
+                                // Название населенного пункта или вышестоящее административно-территориальное образование.
+                                firstGeoObject.getLocalities().length ? firstGeoObject.getLocalities() : firstGeoObject.getAdministrativeAreas(),
+                                // Получаем путь до топонима, если метод вернул null, запрашиваем наименование здания.
+                                firstGeoObject.getThoroughfare() || firstGeoObject.getPremise()
+                            ].filter(Boolean).join(', '),
+                            // В качестве контента балуна задаем строку с адресом объекта.
+                            balloonContent: firstGeoObject.getAddressLine()
+                        });
+
+                    for(var city in Object.keys(regionsToEnglishCitys))
+                    {
+                        if(firstGeoObject.getAddressLine().toLowerCase().indexOf(Object.keys(regionsToEnglishCitys)[city].toLowerCase()) != -1)
+                            alert(regionsToEnglishCitys[Object.keys(regionsToEnglishCitys)[city]]);
+                        
+                    }
+                    AddWeatherToCalendar(calendar.fullCalendar('getView'), )
+
+                });
+            }
+
+        }
+    </script>
+
 
 </body>
 </html>

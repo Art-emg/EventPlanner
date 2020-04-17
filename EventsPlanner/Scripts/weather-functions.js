@@ -2,34 +2,32 @@
 
 var ViewDebug;
 
-function AddWeatherToCalendar(view, element) {
-    ViewDebug = view;
-    ElemDebug = element;
-    if (view.title != $(".fc-center > h2").text()) { alert('AddWeatherToCalendar'); }
+function AddWeatherToCalendar(view, city) {
+
 
     if (daysWeather != undefined &&
         daysWeather.hasOwnProperty(moment(view.start._i).format("YYYY-MM-DD")) &&
         daysWeather.hasOwnProperty(moment(view.end._i).format("YYYY-MM-DD"))) {
-        DrawMonthDaysWeatherToCalendar(view, element);
+        DrawMonthDaysWeatherToCalendar();
         return;
     }
     $.ajax({
-        url: "/Home/GetThreeMonthTemperature?city=" + "minsk" +"&firstMonth=" + moment(view.start._i).format("MM") + "&year=" + moment(view.start._i).format("YYYY"),
+        url: "/Home/GetThreeMonthTemperature?city=" + city +"&firstMonth=" + moment(view.start._i).format("MM") + "&year=" + moment(view.start._i).format("YYYY"),
         success: function (data) {
             var responseDataDictionary = JSON.parse(data);
             for (var key in responseDataDictionary) {
                 daysWeather[key] = responseDataDictionary[key];
             }
-            DrawMonthDaysWeatherToCalendar(view, element);
+            DrawMonthDaysWeatherToCalendar();
 
         }
     });
 
 }
 
-function DrawMonthDaysWeatherToCalendar(view, element) {
+function DrawMonthDaysWeatherToCalendar() {
 
-    $(element).find(".fc-content-skeleton thead td").each(function (i, v) {
+    $(document).find(".fc-content-skeleton thead td").each(function (i, v) {
         if ($.contains($(".weatherCalendarDiv"), $(v))) {
             console.log("cont");
             return;
@@ -46,6 +44,7 @@ function DrawMonthDaysWeatherToCalendar(view, element) {
             newDiv.innerHTML = "<img style='float:left; height:40px; padding-left:24px;' src='" + imageUrl + "' title = '" + imageDescription + "'/>";
             newDiv.innerHTML += "<span style='position:absolute; left:5px;top:3px; font-size:16px;'>" + daysWeather[$(this).attr('data-date')].dayTemp + "°</span>";
             newDiv.innerHTML += "<span style='position:absolute; left:5px;top:19px;  color:#949494'>" + daysWeather[$(this).attr('data-date')].nightTemp + "°</span>";
+            $(this).children("." + newDiv.className).remove();
             $(this).prepend(newDiv);
         }
         catch (e) { }
@@ -84,3 +83,24 @@ daysWeather['2020-07-31'] = { date: "2020-07-30T00:00:00", dayTemp: 26, nightTem
 daysWeather['2020-08-31'] = { date: "2020-08-30T00:00:00", dayTemp: 21, nightTemp: 16, description: "Частично облачно" };
 daysWeather['2020-10-31'] = { date: "2020-10-30T00:00:00", dayTemp: 7, nightTemp: 3, description: "Ясно" };
 daysWeather['2020-12-31'] = { date: "2020-12-30T00:00:00", dayTemp: 1, nightTemp: -3, description: "Облачно" };
+
+var regionsToEnglishCitys =
+{
+    'Брест': 'brest',
+    'Брестская область': 'brest',
+
+    'Виетбск': 'vitebsk',
+    'Витебская область': 'vitebsk',
+
+    'Гомель': 'gomel',
+    'Гомельсксая  область': 'gomel',
+
+    'Гродно': 'grodno',
+    'Гродненская область': 'grodno',
+
+    'Минск': 'minsk',
+    'Минск область': 'minsk',
+
+    'Могилев': 'mogilev',
+    'Могилевская область': 'mogilev',
+}

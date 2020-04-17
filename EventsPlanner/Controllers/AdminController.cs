@@ -10,7 +10,7 @@ using Microsoft.AspNet.Identity;
 
 namespace EventsPlanner.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Administrator")]
     public class AdminController : Controller
     {
         EventContext eventContext = new EventContext();

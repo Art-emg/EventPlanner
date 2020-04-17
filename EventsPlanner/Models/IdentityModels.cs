@@ -18,7 +18,6 @@ namespace EventsPlanner.Models
             return userIdentity;
         }
 
-        //public virtual ICollection<UserEvent> UserEvent { get; set; }
     }
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
@@ -33,8 +32,5 @@ namespace EventsPlanner.Models
             return new ApplicationDbContext();
         }
 
-        //public System.Data.Entity.DbSet<EventsPlanner.Models.ApplicationUser> ApplicationUsers { get; set; }
-
-        //public System.Data.Entity.DbSet<EventsPlanner.Models.ApplicationUser> ApplicationUsers { get; set; }
     }
 }

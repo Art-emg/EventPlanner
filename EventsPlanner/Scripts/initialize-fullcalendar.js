@@ -64,7 +64,7 @@ calendar.fullCalendar({
 
     viewRender:
         function (view, element) {
-            AddWeatherToCalendar(view, element);
+            AddWeatherToCalendar(view, 'mogilev');
 
         },
 
