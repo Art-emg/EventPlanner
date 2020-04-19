@@ -15,10 +15,10 @@ namespace EventsPlanner.Models
         public string Description { get; set; }
         public List<Event> Events { get; set; }
     }
-    public class WeatherTypeContext : DbContext
-    {
-        public WeatherTypeContext() : base("DefaultConnection")
-        { }
-        public DbSet<WeatherType> WeatherTypes { get; set; }
-    }
+    //public class WeatherTypeContext : DbContext
+    //{
+    //    public WeatherTypeContext() : base("DefaultConnection")
+    //    { }
+    //    public DbSet<WeatherType> WeatherTypes { get; set; }
+    //}
 }

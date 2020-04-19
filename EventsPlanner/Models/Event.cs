@@ -47,6 +47,9 @@ namespace EventsPlanner.Models
         public int? WeatherTypeId { get; set; }
 
         [JsonIgnore]
+        public string WeatherRegion { get; set; }
+
+        [JsonIgnore]
         public List<UserEvent> UserEvents { get; set; }
 
         [JsonIgnore]
@@ -61,5 +64,7 @@ namespace EventsPlanner.Models
         public EventContext() : base("DefaultConnection")
         { }
         public DbSet<Event> Events { get; set; }
+
+        public DbSet<WeatherType> WeatherTypes { get; set; }
     }
 }

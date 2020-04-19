@@ -22,9 +22,19 @@ namespace EventsPlanner.Controllers
             return View();
         }
 
+        public ActionResult Events()
+        {
+
+            string currentUser = User.Identity.GetUserId();
+            IEnumerable<Event> userEvents = userEventContext.UserEvents
+                                                    .Where(us => us.UserId == currentUser)                        
+                                                    .Select(us => us.Event);
+
+            return View(userEvents);
+        }
 
 
-    // PartialViews
+        // PartialViews
 
         public ActionResult InfoEventForm(int id)
         {
@@ -182,16 +192,20 @@ namespace EventsPlanner.Controllers
             string currentUser = User.Identity.GetUserId();
             if (currentUser != null)
             {
-                string[] invitedUsers = InvitedUsers.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-
-                
+                if (ev.WeatherRegion != null)
+                {
+                    DayTemperature dayTemperature = DayTemperature.GetDayTemperature
+                           (ev.WeatherRegion, ev.StartDate.Day, ev.StartDate.Month, ev.StartDate.Year);
+                    ev.WeatherDay = dayTemperature.dayTemp;
+                    ev.WeatherNight = dayTemperature.nightTemp;
+                    ev.WeatherType = eventContext.WeatherTypes.Where(i => i.Description == dayTemperature.description).First();
+                }
 
                 eventContext.Events.Add(ev);
                 eventContext.SaveChanges();
 
                 //полуучает объект пользователя по id
                 //ApplicationUser user = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(System.Web.HttpContext.Current.User.Identity.GetUserId());
-
                 
                 userEventContext.UserEvents.Add(new UserEvent()
                 {
@@ -199,6 +213,8 @@ namespace EventsPlanner.Controllers
                     UserId = currentUser,
                     CreatorId = currentUser
                 });
+
+                string[] invitedUsers = InvitedUsers.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
                 foreach (string user in invitedUsers)
                 {
@@ -231,6 +247,10 @@ namespace EventsPlanner.Controllers
             editEvent.Description = ev.Description;
             editEvent.Latitude = ev.Latitude;
             editEvent.Longitude = ev.Longitude;
+            editEvent.WeatherDay = ev.WeatherDay;
+            editEvent.WeatherNight= ev.WeatherNight;
+            editEvent.WeatherType = ev.WeatherType;
+            editEvent.WeatherRegion = ev.WeatherRegion;
 
             eventContext.SaveChanges();
 
@@ -257,24 +277,6 @@ namespace EventsPlanner.Controllers
             return new HttpStatusCodeResult(HttpStatusCode.OK);
         }
 
-        //WEATHER
-
-        [HttpGet]
-        public ActionResult GetThreeMonthTemperature(string city,  int firstMonth, int year)
-        {
-            DateTime date = DateTime.Parse(string.Format("01.{0}.{1}", firstMonth.ToString("d2"), year)).AddMonths(1);
-
-            Dictionary<string, DayTemperature> dict = new Dictionary<string, DayTemperature>();
-            
-
-            foreach (DayTemperature dt in DayTemperature.GetThreeMonthTemperature(city, date.Month, date.Year))
-            {
-                dict[dt.date.ToString("yyyy-MM-dd")] = dt;
-            }
-            string threeMonthWeather = JsonConvert.SerializeObject(dict);
-
-            return Content(threeMonthWeather);
-        }
 
 
     }

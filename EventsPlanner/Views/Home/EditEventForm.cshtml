@@ -60,8 +60,13 @@
 
         <label for="descrEvent">Местоположение : </label><br>
         <span id="textEventLocationAddress">...</span>
+
         <input type="hidden" name="Latitude" id="latitude-input" />
         <input type="hidden" name="Longitude" id="longitude-input" />
+        <input type="hidden" name="WeatherDay" id="weatherDay-input" />
+        <input type="hidden" name="WeatherNight" id="weatherNight-input" />
+        <input type="hidden" name="WeatherType" id="weatherType-input" />
+        <input type="hidden" name="WeatherRegion" id="weatherRegion-input" />
 
     </div>
 
@@ -346,6 +351,8 @@
                     var firstGeoObject = res.geoObjects.get(0);
                     
                     $("#textEventLocationAddress").text(firstGeoObject.getAddressLine());
+
+                    $("#weatherRegion-input").val(GetEngRegionNaimFromAddress(firstGeoObject.getAddressLine()));
 
                     myPlacemark.properties
                         .set({

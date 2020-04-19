@@ -1,4 +1,7 @@
-﻿var calendar = $('#calendar');
+﻿
+var debugRes;
+
+var calendar = $('#calendar');
 calendar.fullCalendar({
     schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
     editable: true,
@@ -64,8 +67,10 @@ calendar.fullCalendar({
 
     viewRender:
         function (view, element) {
-            AddWeatherToCalendar(view, 'mogilev');
-
+            if(sessionStorage['regionLocation']!=null)
+                AddWeatherToCalendar(view, sessionStorage['regionLocation']);
+            else 
+                AddWeatherToCalendar(view, 'minsk');
         },
 
 
@@ -83,3 +88,4 @@ calendar.fullCalendar({
     //events:[{ allDay: true,name: "dfdfdsf",title: "Событие один descr",start: "12/27/2019",id: 12,color: 'red'},{allDay: true, title: "Событие длинное", start: "12/15/2019", end: "12/18/2019", id: 15}]
 
 });
+

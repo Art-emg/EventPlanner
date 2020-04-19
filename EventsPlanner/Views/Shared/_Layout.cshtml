@@ -32,7 +32,7 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Главная", "Index", "Home")</li>
-                    <li>@Html.ActionLink("Мои события", "")</li>
+                    <li>@Html.ActionLink("Мои события", "Events", "Home")</li>
                 </ul>
 
                 @if (User.IsInRole("Administrator"))
@@ -87,21 +87,20 @@
         </footer>
     </div>
 
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=b83893db-c999-4110-9982-018681aff9d6&lang=ru_RU" type="text/javascript"></script>
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
     @Scripts.Render("~/Scripts/Site.js")
     <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
-    <script src="https://api-maps.yandex.ru/2.1/?apikey=b83893db-c999-4110-9982-018681aff9d6&lang=ru_RU" type="text/javascript"></script>
-    
+    @RenderSection("scripts", required: false)
+
     <script type="text/javascript">
         $('.openMapSelectLocation').fancybox({
-
-            afterShow: function () {
-            }
+           afterShow: function () {   }
         });
+
+
         ymaps.ready(init);
-        var res;
         function init() {
 
             var myPlacemark, currentLocationSelectMap = new ymaps.Map("mapSelectCurrentUserLocation", {
@@ -171,9 +170,10 @@
                     sessionStorage['latitudeLocation'] = result.geoObjects.position[0];
                     sessionStorage['longitudeLocation'] = result.geoObjects.position[1];
 
+                    currentLocationSelectMap.geoObjects.add(myPlacemark);
                 });
             }
-
+            currentLocationSelectMap.geoObjects.add(myPlacemark);
 
             currentLocationSelectMap.geoObjects.add(myPlacemark);
 
@@ -251,13 +251,10 @@
                             balloonContent: firstGeoObject.getAddressLine()
                         });
 
-                    for(var city in Object.keys(regionsToEnglishCitys))
-                    {
-                        if(firstGeoObject.getAddressLine().toLowerCase().indexOf(Object.keys(regionsToEnglishCitys)[city].toLowerCase()) != -1)
-                            alert(regionsToEnglishCitys[Object.keys(regionsToEnglishCitys)[city]]);
-                        
-                    }
-                    AddWeatherToCalendar(calendar.fullCalendar('getView'), )
+                    var currentRegion = GetEngRegionNaimFromAddress(firstGeoObject.getAddressLine());
+                    sessionStorage['regionLocation'] = currentRegion
+                    AddWeatherToCalendar(calendar.fullCalendar('getView'),currentRegion);
+
 
                 });
             }

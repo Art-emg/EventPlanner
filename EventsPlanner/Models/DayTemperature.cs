@@ -107,6 +107,25 @@ namespace EventsPlanner.Models
 
             return threeMonthTemerature;
         }
+        public static DayTemperature GetDayTemperature(string city, int day, int month, int year)
+        {
+            DateTime date = DateTime.Parse(string.Format("01.{0}.{1}", month, year));
+            List<DayTemperature> monthTemerature = new List<DayTemperature>();
+
+
+            try
+            {
+                foreach(DayTemperature dayTemp in GetMonthTemperature(city, date.Month, date.Year))
+                {
+                    if (dayTemp.date.Day == day)
+                        return dayTemp;
+                }
+            }
+            catch (ArgumentNullException) { }
+
+
+            return null;
+        }
 
     }
 }
