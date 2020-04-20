@@ -68,13 +68,16 @@
 
 <div class="row " style="margin:30px 0px; min-height:560px">
     <div class="col-md-8">
-        
-        Bootstrap Switch Default
-        <div class="material-switch pull-right">
-            <input id="someSwitchOptionDefault" name="someSwitchOption001" type="checkbox" />
-            <label for="someSwitchOptionDefault" class="label-default"></label>
-        </div>
 
+        <div id="switcherListMap" style="margin:15px;">
+            <span style="padding-right:10px;">Список</span>
+                <div class="material-switch" style="display:inline-block">
+                    <input id="someSwitchOptionDefault" name="someSwitchOption001" type="checkbox" />
+                    <label for="someSwitchOptionDefault" class="label-default"></label>
+                </div>
+            <span style ="padding-left:10px;">Карта</span>
+        </div>
+      
 
         <table class="table" id="eventsTable">
             <tr>
@@ -130,7 +133,7 @@
 
         </table>
 
-        <div id="eventsPageCalendar" style="height:600px;"></div>
+        <div id="eventsPageCalendar" style="height:600px; display:none;"></div>
 
 
     </div>
@@ -146,9 +149,24 @@
 </div>
 
 <script>
+
+    $('#someSwitchOptionDefault').change(function() {
+      //alert($(this).prop('checked'))
+        if ($(this).prop('checked')) {
+            $('#eventsTable').css("display", "none");
+            $('#eventsPageCalendar').css("display", "block");
+        }
+        else {
+            $('#eventsTable').css("display", "block");
+            $('#eventsPageCalendar').css("display", "none");
+        }
+    })
+
+    var Debug;
+    var eventsMap;
     ymaps.ready(init);
         function init(){
-            var  eventsMap = new ymaps.Map("eventsPageCalendar", {
+             eventsMap = new ymaps.Map("eventsPageCalendar", {
                 center: [53.89, 27.56],
                 zoom: 6
             }, {
@@ -188,7 +206,7 @@
                 });
 
                 // Добавим многоугольник на карту.
-                eventSelectMap.geoObjects.add(background);
+                eventsMap.geoObjects.add(background);
             })
             // } ограничить страной
 
@@ -197,21 +215,41 @@
 
             @foreach (var item in Model)
             {
+                string bodyString = item.StartDate.ToString("dd.MM.yyyy H:mm") + " - ";
+                if (item.StartDate.ToString("dd.MM.yyyy") != item.EndDate.ToString("dd.MM.yyyy"))
+                {
+                    bodyString += item.EndDate.ToString("dd.MM.yyyy");
+                }
+                bodyString += item.EndDate.ToString("H:mm");
+
                 <Text>
-                myPlacemark = new ymaps.Placemark([@item.Latitude, @item.Longitude], {
-                    // Чтобы балун и хинт открывались на метке, необходимо задать ей определенные свойства.
-                    balloonContentHeader: "@item.Name",
-                    balloonContentBody: "Содержимое <em>балуна</em> метки",
-                    balloonContentFooter: "Подвал",
-                    hintContent: "Хинт", 
-
-                        });
-
-                    eventsMap.geoObjects.add(myPlacemark);
+                    CreatePlaceMark(@item.Latitude, @item.Longitude, @item.EventId, "@item.Name", "@bodyString", "@item.Description");
                 </Text>
-            }
+             }
 
 
         }
+
+    function CreatePlaceMark(lat, lon, id, name, date, descr) {
+        
+        var eventId = id;
+        var myPlacemark = new ymaps.Placemark([lat, lon], {
+        // Чтобы балун и хинт открывались на метке, необходимо задать ей определенные свойства.
+
+            balloonContentHeader: name,
+            balloonContentBody: date+ " <br>" + descr,
+            balloonContentFooter: '<button type="button" class="btn btn-link"\
+                                    onclick="GetInfoEventForm(' + eventId+ ')">\
+                                    Показать\
+                                    </button>',
+            hintContent: name
+        });
+        myPlacemark.id = eventId;
+        myPlacemark.events.add('click', function () {
+            //alert(myPlacemark.id);
+        });
+        eventsMap.geoObjects.add(myPlacemark);
+    }
+
 
 </script>

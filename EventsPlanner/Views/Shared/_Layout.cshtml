@@ -21,6 +21,8 @@
 <body>
 
     <script src="https://api-maps.yandex.ru/2.1/?apikey=b83893db-c999-4110-9982-018681aff9d6&lang=ru_RU" type="text/javascript"></script>
+
+    @Scripts.Render("~/bundles/jquery")
     <div class="navbar navbar-default navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
@@ -50,9 +52,8 @@
                             </ul>
                         </li>
                     </ul>
-
-
                 }
+            <div class="navbar-text">
                 <div class="form-inline">
                     <a class="btn btn-xs btn-primary openMapSelectLocation" data-fancybox data-modal="true" data-src="#modalCurrentLocation" href="javascript:;">
                         <i class="glyphicon glyphicon-plus"></i>
@@ -68,6 +69,7 @@
                     <span id="textCurrentLocationAddress">...</span>
 
                 </div>
+            </div>
                 @Html.Partial("_LoginPartial")
             </div>
         </div>
@@ -89,7 +91,6 @@
         </footer>
     </div>
 
-    @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/Scripts/Site.js")
     <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>

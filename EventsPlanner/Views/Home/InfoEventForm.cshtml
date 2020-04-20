@@ -1,4 +1,7 @@
 ﻿<div class="animated fadeIn">
+
+    <div style="height:70px; width:70px; background-color:red; float:right"></div>
+
     <h3>@ViewBag.Event.Name</h3>
     <p style="font-size:11px; color:gray;">
         ID: @ViewBag.Event.EventId
@@ -16,12 +19,12 @@
     @if (ViewBag.Event.Latitude != null && ViewBag.Event.Longitude != null)
     {
         <p id="locationInfoString">
-            Местоположение: 
-            
+            Местоположение:
+
             <script>
                 ymaps.geocode([@ViewBag.Event.Latitude, @ViewBag.Event.Longitude]).then(function (res) {
                     var firstGeoObject = res.geoObjects.get(0);
-                    $('#locationInfoString').append(firstGeoObject.getAddressLine());                   
+                    $('#locationInfoString').append(firstGeoObject.getAddressLine());
                 });
             </script>
         </p>
