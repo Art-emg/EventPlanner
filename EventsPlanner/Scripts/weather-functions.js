@@ -7,14 +7,14 @@ function AddWeatherToCalendar(view, city) {
 
     if (daysWeather != undefined &&
         daysWeather.hasOwnProperty(city)&&
-        daysWeather[city].hasOwnProperty(moment(view.start._i).format("YYYY-MM-DD")) &&
-        daysWeather[city].hasOwnProperty(moment(view.end._i).format("YYYY-MM-DD"))) {
+        daysWeather[city].hasOwnProperty(moment(view.activeStart).format("YYYY-MM-DD")) &&
+        daysWeather[city].hasOwnProperty(moment(view.activeEnd).format("YYYY-MM-DD"))) {
         DrawMonthDaysWeatherToCalendar(city);
         return;
     }
     console.log("[AddWeatherToCalendar] sended ajax to get weather from " + city);
     $.ajax({
-        url: "/Weather/GetThreeMonthTemperature?city=" + city +"&firstMonth=" + moment(view.start._i).format("MM") + "&year=" + moment(view.start._i).format("YYYY"),
+        url: "/Weather/GetThreeMonthTemperature?city=" + city + "&firstMonth=" + moment(view.activeStart).format("MM") + "&year=" + moment(view.activeStart).format("YYYY"),
         success: function (data) {
             responseDataDictionary = JSON.parse(data);
             daysWeather[city] = Object.assign(responseDataDictionary[city], daysWeather[city]);
@@ -72,7 +72,12 @@ var descriptionToImage =
 };
 
 // Дни, которых нет на сайте
-//daysWeather['2020-04-30'] = { date: "2020-04-29T00:00:00", dayTemp: 16, nightTemp: 10, description: "Ясно" };
+//Object.assign(daysWeather['minsk'], { "2020-05-01": { date: "2020-05-01T00:00:00", dayTemp: 16, nightTemp: 10, description: "Ясно" } });
+//daysWeather['mogilev']['2020-05-01'] = { date: "2020-04-29T00:00:00", dayTemp: 16, nightTemp: 10, description: "Ясно" };
+//daysWeather['grodno']['2020-05-01'] = { date: "2020-04-29T00:00:00", dayTemp: 16, nightTemp: 10, description: "Ясно" };
+//daysWeather['vitebsk']['2020-05-01'] = { date: "2020-04-29T00:00:00", dayTemp: 16, nightTemp: 10, description: "Ясно" };
+//daysWeather['gomel']['2020-05-01'] = { date: "2020-04-29T00:00:00", dayTemp: 16, nightTemp: 10, description: "Ясно" };
+//daysWeather['brest']['2020-05-01'] = { date: "2020-04-29T00:00:00", dayTemp: 16, nightTemp: 10, description: "Ясно" };
 //daysWeather['2020-06-30'] = { date: "2020-06-29T00:00:00", dayTemp: 22, nightTemp: 16, description: "Частично облачно" };
 //daysWeather['2020-09-30'] = { date: "2020-09-29T00:00:00", dayTemp: 15, nightTemp: 10, description: "Частично облачно" };
 //daysWeather['2020-11-30'] = { date: "2020-11-29T00:00:00", dayTemp: 0, nightTemp: -4, description: "Частично облачно" };

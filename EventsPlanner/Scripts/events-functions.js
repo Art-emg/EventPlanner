@@ -55,7 +55,8 @@ function EventDelete(eventId) {
 
         url: "/Home/DelEvent/" + eventId,
         success: function (data) {
-            $('#calendar').fullCalendar('removeEvents', eventId);
+            var event = calendar.getEventById(eventId);
+            event.remove();
         }
     });
 }
@@ -70,7 +71,7 @@ function AddEventEndEditCalendar(form) {
         data: form.serialize(),
         success: function (data) {
 
-            calendar.fullCalendar('refetchEvents');
+            calendar.refetchEvents();
             GetInfoEventForm(data);
         }
     });
@@ -87,8 +88,8 @@ function EditEvent(event) {
         {
             EventId: event.id,
             Name: event.title,
-            StartDate: event.start.format(),
-            EndDate: event.end.format()
+            StartDate: moment(event.start).format(),
+            EndDate: moment(event.end).format()
         },
         success: function (data) {
 
@@ -104,7 +105,7 @@ function EditEventEndEditCalendar(form) {
         url: url,
         data: form.serialize(),
         success: function (data) {
-            calendar.fullCalendar('refetchEvents');
+            calendar.refetchEvents();
             GetInfoEventForm(data);
         }
     });

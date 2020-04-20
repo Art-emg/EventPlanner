@@ -48,7 +48,7 @@ function EventDelete(eventId) {
 
 function GetListEventForm(date){
 
-    //метож-заглушка
+    //метод-заглушка
 }
 
 function checkValidDatePicker() {

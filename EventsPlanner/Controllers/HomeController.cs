@@ -105,8 +105,8 @@ namespace EventsPlanner.Controllers
             string currentUser = User.Identity.GetUserId();
             ViewBag.UserNames = UsersContext.Users
                 .Where(p => p.Id != currentUser).ToList().Select(p => p.UserName);
-            ViewBag.EventStartDate = startDate;
-            ViewBag.EventEndDate = startDate;
+            ViewBag.EventStartDate = DateTime.Parse(startDate).ToString("dd.MM.yyyy H:mm");
+            ViewBag.EventEndDate = DateTime.Parse(startDate).ToString("dd.MM.yyyy H:mm");
             ///
             return PartialView("EditEventForm");
         }
@@ -118,8 +118,8 @@ namespace EventsPlanner.Controllers
             string currentUser = User.Identity.GetUserId();
             ViewBag.UserNames = UsersContext.Users
                 .Where(p=>p.Id!= currentUser).ToList().Select(p => p.UserName);
-            ViewBag.EventStartDate = DateTime.Parse(startDate).ToString("d");
-            ViewBag.EventEndDate = DateTime.Parse(endDate).ToString("d");
+            ViewBag.EventStartDate = DateTime.Parse(startDate).ToString("dd.MM.yyyy H:mm");
+            ViewBag.EventEndDate = DateTime.Parse(endDate).ToString("dd.MM.yyyy H:mm");
             return PartialView("EditEventForm");
         }
 
@@ -131,8 +131,8 @@ namespace EventsPlanner.Controllers
             ViewBag.IsEditForm = true;
             ViewBag.EventId = ev.EventId;
             ViewBag.EventName = ev.Name;
-            ViewBag.EventStartDate = ev.StartDate.ToString("d");
-            ViewBag.EventEndDate = ev.EndDate.ToString("d");
+            ViewBag.EventStartDate = ev.StartDate.ToString("dd.MM.yyyy H:mm");
+            ViewBag.EventEndDate = ev.EndDate.ToString("dd.MM.yyyy H:mm");
             ViewBag.EventDescr = ev.Description;
             ViewBag.EventLatitude = ev.Latitude;
             ViewBag.EventLongitude = ev.Longitude;
@@ -153,11 +153,11 @@ namespace EventsPlanner.Controllers
                                                         .Where(us => us.UserId == currentUser 
                                                                 && us.CreatorId == currentUser)
                                                         .Select(us => us.Event);
-                foreach(Event ev in userEvents)
-                {
-                    if (ev.EndDate != ev.StartDate)
-                        ev.EndDate = ev.EndDate.AddDays(1);
-                }
+                //foreach(Event ev in userEvents)
+                //{
+                //    if (ev.EndDate != ev.StartDate)
+                //        ev.EndDate = ev.EndDate.AddDays(1);
+                //}
                 string json = JsonConvert.SerializeObject(userEvents);
                 return json;
             }
@@ -174,11 +174,11 @@ namespace EventsPlanner.Controllers
                                                         .Where(us => us.UserId == currentUser 
                                                                 && us.CreatorId != currentUser)
                                                         .Select(us => us.Event);
-                foreach (Event ev in userEvents)
-                {
-                    if (ev.EndDate != ev.StartDate)
-                        ev.EndDate = ev.EndDate.AddDays(1);
-                }
+                //foreach (Event ev in userEvents)
+                //{
+                //    if (ev.EndDate != ev.StartDate)
+                //        ev.EndDate = ev.EndDate.AddDays(1);
+                //}
                 string json = JsonConvert.SerializeObject(userEvents);
                 return json;
             }
@@ -240,6 +240,15 @@ namespace EventsPlanner.Controllers
         [HttpPost]
         public ActionResult EditEvent(Event ev)
         {
+            if (ev.WeatherRegion != null)
+            {
+                DayTemperature dayTemperature = DayTemperature.GetDayTemperature
+                       (ev.WeatherRegion, ev.StartDate.Day, ev.StartDate.Month, ev.StartDate.Year);
+                ev.WeatherDay = dayTemperature.dayTemp;
+                ev.WeatherNight = dayTemperature.nightTemp;
+                ev.WeatherType = eventContext.WeatherTypes.Where(i => i.Description == dayTemperature.description).First();
+            }
+
             Event editEvent = eventContext.Events.Find(ev.EventId);
             editEvent.Name = ev.Name;
             editEvent.StartDate = ev.StartDate;

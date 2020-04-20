@@ -4,7 +4,15 @@
         ID: @ViewBag.Event.EventId
         Создал: @ViewBag.CreatorUserName
     </p>
-    <p>@ViewBag.Event.StartDate.ToString("D") - @ViewBag.Event.EndDate.ToString("D") </p>
+    <p>
+        @ViewBag.Event.StartDate.ToString("dd.MM.yyyy H:mm") -
+        @if (ViewBag.Event.StartDate.ToString("dd.MM.yyyy") != ViewBag.Event.EndDate.ToString("dd.MM.yyyy"))
+        {
+            @ViewBag.Event.EndDate.ToString("dd.MM.yyyy")
+        }
+
+        @ViewBag.Event.EndDate.ToString("H:mm")
+    </p>
     @if (ViewBag.Event.Latitude != null && ViewBag.Event.Longitude != null)
     {
         <p id="locationInfoString">

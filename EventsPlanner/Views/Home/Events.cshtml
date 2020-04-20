@@ -14,12 +14,67 @@
     @Scripts.Render("~/Scripts/Libs/moment.js")
     @Scripts.Render("~/Scripts/events-page.js")
     @Scripts.Render("~/Scripts/Libs/bootstrap-datetimepicker.js")
-    @Scripts.Render("~/Scripts/Libs/fullcalendar/locale/ru.js")
-    @Scripts.Render("~/Scripts/events-functions.js")
     @Scripts.Render("~/Scripts/weather-functions.js")
 }
+    <style>
+        .material-switch > input[type="checkbox"] {
+            display: none;
+        }
+
+        .material-switch > label {
+            cursor: pointer;
+            height: 0px;
+            position: relative;
+            width: 40px;
+        }
+
+        .material-switch > label::before {
+            background: rgb(0, 0, 0);
+            box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 0.5);
+            border-radius: 8px;
+            content: '';
+            height: 16px;
+            margin-top: -8px;
+            position: absolute;
+            opacity: 0.3;
+            transition: all 0.4s ease-in-out;
+            width: 40px;
+        }
+
+        .material-switch > label::after {
+            background: rgb(255, 255, 255);
+            border-radius: 16px;
+            box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+            content: '';
+            height: 24px;
+            left: -4px;
+            margin-top: -8px;
+            position: absolute;
+            top: -4px;
+            transition: all 0.3s ease-in-out;
+            width: 24px;
+        }
+
+        .material-switch > input[type="checkbox"]:checked + label::before {
+            background: inherit;
+            opacity: 0.5;
+        }
+
+        .material-switch > input[type="checkbox"]:checked + label::after {
+            background: inherit;
+            left: 20px;
+        }
+    </style>
+
 <div class="row " style="margin:30px 0px; min-height:560px">
     <div class="col-md-8">
+        
+        Bootstrap Switch Default
+        <div class="material-switch pull-right">
+            <input id="someSwitchOptionDefault" name="someSwitchOption001" type="checkbox" />
+            <label for="someSwitchOptionDefault" class="label-default"></label>
+        </div>
+
 
         <table class="table" id="eventsTable">
             <tr>
@@ -75,6 +130,9 @@
 
         </table>
 
+        <div id="eventsPageCalendar" style="height:600px;"></div>
+
+
     </div>
     <div class="col-md-4">
         <div id="event-form" style="margin-top: 0px !important; position:fixed; width:350px">
@@ -87,3 +145,73 @@
     </div>
 </div>
 
+<script>
+    ymaps.ready(init);
+        function init(){
+            var  eventsMap = new ymaps.Map("eventsPageCalendar", {
+                center: [53.89, 27.56],
+                zoom: 6
+            }, {
+                // Ограничим область карты.
+                restrictMapArea: [[50, 21], [58, 34]]
+            });
+            ymaps.borders.load('001', {
+                lang: 'ru',
+                quality: 2
+            }).then(function (result) {
+
+                // Создадим многоугольник, который будет скрывать весь мир, кроме заданной страны.
+                var background = new ymaps.Polygon([
+                    [
+                        [85, -179.99],
+                        [85, 179.99],
+                        [-85, 179.99],
+                        [-85, -179.99],
+                        [85, -179.99]
+                    ]
+                ], {}, {
+                    fillColor: '#66666666',
+                    strokeWidth: 0,
+                    // Для того чтобы полигон отобразился на весь мир, нам нужно поменять
+                    // алгоритм пересчета координат геометрии в пиксельные координаты.
+                    coordRendering: 'straightPath'
+                });
+
+                // Найдём страну по её iso коду.
+                var region = result.features.filter(function (feature) { return feature.properties.iso3166 == 'BY'; })[0];
+
+                // Добавим координаты этой страны в полигон, который накрывает весь мир.
+                // В полигоне образуется полость, через которую будет видно заданную страну.
+                var masks = region.geometry.coordinates;
+                masks.forEach(function (mask) {
+                    background.geometry.insert(1, mask);
+                });
+
+                // Добавим многоугольник на карту.
+                eventSelectMap.geoObjects.add(background);
+            })
+            // } ограничить страной
+
+
+            var myPlacemark
+
+            @foreach (var item in Model)
+            {
+                <Text>
+                myPlacemark = new ymaps.Placemark([@item.Latitude, @item.Longitude], {
+                    // Чтобы балун и хинт открывались на метке, необходимо задать ей определенные свойства.
+                    balloonContentHeader: "@item.Name",
+                    balloonContentBody: "Содержимое <em>балуна</em> метки",
+                    balloonContentFooter: "Подвал",
+                    hintContent: "Хинт", 
+
+                        });
+
+                    eventsMap.geoObjects.add(myPlacemark);
+                </Text>
+            }
+
+
+        }
+
+</script>

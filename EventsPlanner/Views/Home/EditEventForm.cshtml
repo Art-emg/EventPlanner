@@ -19,7 +19,7 @@
         <label for="datetimepickerStart">Начало</label>
         <div class='input-group date' id='datetimepickerStart'>
             <input name="StartDate" type='text' class="form-control" id="startEvent" value="@ViewBag.EventStartDate" required />
-            <span class="input-group-addon">
+            <span class="input-group-addon" style="padding: 6px 16px;">
                 <span class="glyphicon glyphicon-calendar"></span>
             </span>
         </div>
@@ -33,11 +33,16 @@
                            @ViewBag.EventEndDate
                        }" required />
 
-            <span class="input-group-addon">
+            <span class="input-group-addon" style="padding: 6px 16px;">
                 <span class="glyphicon glyphicon-calendar"></span>
             </span>
         </div>
     </div>
+
+
+
+
+
     <div class="form-group">
         <label for="descrEvent">Описание</label>
         <textarea name="Description" type="text" class="form-control" id="descrEvent" placeholder="Введите описание">
@@ -75,7 +80,7 @@
     { }
     else
     {
-      
+
         <div class="form-group">
 
             <div class="dropdown" style="display:inline-block;">
@@ -181,24 +186,24 @@
 
             $('#datetimepickerStart').datetimepicker(
                 {
-                    format: 'L',
                     minDate: '08.04.1999',
-                    maxDate: '08.04.2099'
+                    maxDate: '08.04.2099',
+                    locale: 'ru'
                 }
             );
             $('#datetimepickerEnd').datetimepicker({
-                format: 'L',
                 minDate: '08.04.1999',
-                    maxDate: '08.04.2099'
-
-
+                    maxDate: '08.04.2099',
+                    locale: 'ru',
+                    useCurrent: false
             });
 
             checkValidDatePicker();
 
             $("#datetimepickerStart").on("dp.change", function (e) {
                 $('#datetimepickerEnd').data("DateTimePicker").minDate(e.date);
-                           });
+            });
+
             $("#datetimepickerEnd").on("dp.change", function (e) {
                 $('#datetimepickerStart').data("DateTimePicker").maxDate(e.date);
             });
