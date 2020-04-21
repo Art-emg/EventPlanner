@@ -52,8 +52,6 @@ function DrawMonthDaysWeatherToCalendar(city) {
 }
 
 
-
-
 var descriptionToImage =
 {
     "Частично облачно": "https://img.icons8.com/color/48/000000/partly-cloudy-day.png",
@@ -70,6 +68,11 @@ var descriptionToImage =
     "Облачно и дождь": "https://img.icons8.com/color/48/000000/partly-cloudy-rain.png",
     "Облачно и кратковременные осадки": "https://img.icons8.com/color/48/000000/partly-cloudy-rain.png"
 };
+
+
+
+
+
 
 // Дни, которых нет на сайте
 //Object.assign(daysWeather['minsk'], { "2020-05-01": { date: "2020-05-01T00:00:00", dayTemp: 16, nightTemp: 10, description: "Ясно" } });

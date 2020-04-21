@@ -136,6 +136,7 @@ namespace EventsPlanner.Controllers
             ViewBag.EventDescr = ev.Description;
             ViewBag.EventLatitude = ev.Latitude;
             ViewBag.EventLongitude = ev.Longitude;
+            ViewBag.Event = ev;
 
             return PartialView();
         }

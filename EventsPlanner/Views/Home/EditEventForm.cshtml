@@ -68,10 +68,22 @@
 
         <input type="hidden" name="Latitude" id="latitude-input" />
         <input type="hidden" name="Longitude" id="longitude-input" />
-        <input type="hidden" name="WeatherDay" id="weatherDay-input" />
-        <input type="hidden" name="WeatherNight" id="weatherNight-input" />
         <input type="hidden" name="WeatherType" id="weatherType-input" />
-        <input type="hidden" name="WeatherRegion" id="weatherRegion-input" />
+        @if (ViewBag.IsEditForm != null && ViewBag.IsEditForm == true && ViewBag.Event.WeatherNight != null)
+        {
+            <input type="hidden" name="WeatherRegion" id="weatherRegion-input" value="@ViewBag.Event.WeatherRegion" />
+            <input type="hidden" name="WeatherNight" id="weatherNight-input" value="@ViewBag.Event.WeatherNight" />
+            <input type="hidden" name="WeatherDay" id="weatherDay-input"  value="@ViewBag.Event.WeatherDay"/>
+        }
+        else
+        {
+            <input type="hidden" name="WeatherRegion" id="weatherRegion-input" />
+            <input type="hidden" name="WeatherNight" id="weatherNight-input" />
+            <input type="hidden" name="WeatherDay" id="weatherDay-input" />
+        }
+
+
+
 
     </div>
 
