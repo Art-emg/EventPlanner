@@ -221,10 +221,13 @@
                     bodyString += item.EndDate.ToString("dd.MM.yyyy");
                 }
                 bodyString += item.EndDate.ToString("H:mm");
-
-                <Text>
-                    CreatePlaceMark(@item.Latitude, @item.Longitude, @item.EventId, "@item.Name", "@bodyString", "@item.Description");
-                </Text>
+                if (item.Latitude != null && item.Longitude != null)
+                {
+                    <Text>
+                        if(@item.Latitude != null && @item.Longitude != null)
+                        CreatePlaceMark(@item.Latitude, @item.Longitude, @item.EventId, "@item.Name", "@bodyString", "@item.Description");
+                    </Text>
+                }
              }
 
 

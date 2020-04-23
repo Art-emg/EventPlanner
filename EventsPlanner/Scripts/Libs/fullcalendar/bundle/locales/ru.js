@@ -17,7 +17,7 @@
             month: "Месяц",
             week: "Неделя",
             day: "День",
-            list: "Повестка дня"
+            list: "Список"
         },
         weekLabel: "Нед",
         allDayText: "Весь день",

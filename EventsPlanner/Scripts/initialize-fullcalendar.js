@@ -22,6 +22,8 @@ var Debug;
             second: '2-digit',
             hour12: false
         },
+        allDaySlot: false,
+
         customButtons: {
             refreshButton: {
                 text: '↻',
@@ -91,19 +93,14 @@ var Debug;
 
         eventResize: function (info) {
 
-            EditEvent(info.event);
+            EditEvent(info.event, true);
         },
 
 
         eventDrop: function (info) {
-            if (info.event.end != null) {
-               // info.event.end = info.event.end.subtract(1, 'day');
-            }
-            EditEvent(info.event);
-            //if (event.end != null)
-            //    alert(event.id + ' ' + event.title + " " + event.start.format() + " - " + event.end.format());
-            //else
-            //    alert(event.id + ' ' + event.title + " " + event.start.format() + " (one day)");
+
+            EditEvent(info.event, true);
+           
         },
 
 

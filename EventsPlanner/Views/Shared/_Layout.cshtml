@@ -31,7 +31,8 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("EventsPlanner", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                <img src="https://img.icons8.com/nolan/64/compact-camera.png" style="float:left; width:50px;"/>
+                @Html.ActionLink("PhotoPlanner", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
@@ -191,7 +192,7 @@
                     firstGeoObject.getThoroughfare() || firstGeoObject.getPremise()
                 ].filter(Boolean).join(', ');
 
-                $("#textCurrentLocationAddress").text(firstGeoObject.getAddressLine());
+                $("#textCurrentLocationAddress").text((firstGeoObject.getLocalities().length ? firstGeoObject.getLocalities() : firstGeoObject.getAdministrativeAreas().replace('Беларусь-','')));
 
                 myPlacemark.properties
                     .set({
@@ -239,7 +240,7 @@
                 myPlacemark.properties.set('iconCaption', 'поиск...');
                 ymaps.geocode(coords).then(function (res) {
                     var firstGeoObject = res.geoObjects.get(0);
-                    $("#textCurrentLocationAddress").text(firstGeoObject.getAddressLine());
+                    $("#textCurrentLocationAddress").text((firstGeoObject.getLocalities().length ? firstGeoObject.getLocalities() : firstGeoObject.getAdministrativeAreas().replace('Беларусь-','')));
                     myPlacemark.properties
                         .set({
                             // Формируем строку с данными об объекте.

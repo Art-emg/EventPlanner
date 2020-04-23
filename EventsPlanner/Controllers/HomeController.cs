@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using Newtonsoft.Json;
 using Microsoft.AspNet.Identity.Owin;
 using System.Net;
+using System.Data.Entity;
 
 namespace EventsPlanner.Controllers
 {
@@ -68,17 +69,17 @@ namespace EventsPlanner.Controllers
         }
         public ActionResult ListEventsForm(string date)
         {
-            DateTime dateTime = DateTime.Parse(date);
+            DateTime dateTime = DateTime.Parse(date).Date;
             
             string currentUser = User.Identity.GetUserId();
             IEnumerable<Event> createdEvents = userEventContext.UserEvents
                             .Where(ue=>ue.UserId == currentUser && ue.CreatorId == currentUser)
                             .Select(ue=>ue.Event)
-                            .Where(p => (p.StartDate <= dateTime && p.EndDate >= dateTime) );
+                            .Where(p => DbFunctions.TruncateTime(p.StartDate) <= dateTime && DbFunctions.TruncateTime(p.EndDate)>= dateTime ).ToList();
             IEnumerable<Event> invitedEvents = userEventContext.UserEvents
                 .Where(ue => ue.UserId == currentUser && ue.CreatorId != currentUser)
                 .Select(ue => ue.Event)
-                .Where(p => (p.StartDate <= dateTime && p.EndDate >= dateTime));
+                .Where(p => DbFunctions.TruncateTime(p.StartDate) <= dateTime && DbFunctions.TruncateTime(p.EndDate) >= dateTime).ToList();
 
 
 
@@ -239,29 +240,29 @@ namespace EventsPlanner.Controllers
         }
 
         [HttpPost]
-        public ActionResult EditEvent(Event ev)
+        public ActionResult EditEvent(Event ev, bool ResizeOrDrug = false)
         {
-            if (ev.WeatherRegion != null)
-            {
-                DayTemperature dayTemperature = DayTemperature.GetDayTemperature
-                       (ev.WeatherRegion, ev.StartDate.Day, ev.StartDate.Month, ev.StartDate.Year);
-                ev.WeatherDay = dayTemperature.dayTemp;
-                ev.WeatherNight = dayTemperature.nightTemp;
-                ev.WeatherType = eventContext.WeatherTypes.Where(i => i.Description == dayTemperature.description).First();
-            }
+
 
             Event editEvent = eventContext.Events.Find(ev.EventId);
             editEvent.Name = ev.Name;
             editEvent.StartDate = ev.StartDate;
             editEvent.EndDate = ev.EndDate;
             editEvent.Description = ev.Description;
-            editEvent.Latitude = ev.Latitude;
-            editEvent.Longitude = ev.Longitude;
-            editEvent.WeatherDay = ev.WeatherDay;
-            editEvent.WeatherNight= ev.WeatherNight;
-            editEvent.WeatherType = ev.WeatherType;
-            editEvent.WeatherRegion = ev.WeatherRegion;
+            editEvent.Latitude = ev.Latitude ?? editEvent.Latitude;
+            editEvent.Longitude = ev.Longitude ?? editEvent.Longitude;
+            editEvent.WeatherRegion = ev.WeatherRegion ?? editEvent.WeatherRegion;
 
+            if (editEvent.WeatherRegion != null)
+            {
+                DayTemperature dayTemperature = DayTemperature.GetDayTemperature
+                       (editEvent.WeatherRegion, ev.StartDate.Day, ev.StartDate.Month, ev.StartDate.Year);
+                editEvent.WeatherDay = dayTemperature.dayTemp;
+                editEvent.WeatherNight = dayTemperature.nightTemp;
+                editEvent.WeatherType = eventContext.WeatherTypes.Where(i => i.Description == dayTemperature.description).First();
+            }
+
+            
             eventContext.SaveChanges();
 
             return Content(ev.EventId.ToString());

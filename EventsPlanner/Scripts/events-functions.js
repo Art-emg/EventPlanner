@@ -76,7 +76,7 @@ function AddEventEndEditCalendar(form) {
         }
     });
 }
-function EditEvent(event) {
+function EditEvent(event, resizeOrDrug = false) {
     var url = "/Home/EditEvent";
     if (event.end == null)
         event.end = event.start;
@@ -89,7 +89,8 @@ function EditEvent(event) {
             EventId: event.id,
             Name: event.title,
             StartDate: moment(event.start).format(),
-            EndDate: moment(event.end).format()
+            EndDate: moment(event.end).format(),
+            ResizeOrDrug: resizeOrDrug
         },
         success: function (data) {
 
