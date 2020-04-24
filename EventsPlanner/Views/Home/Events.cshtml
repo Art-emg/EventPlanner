@@ -119,7 +119,7 @@
                     </td>
                     <td>
                         <button type="button" class="btn btn-link"
-                                onclick="alert('aa')">
+                                onclick="EventDelete(@item.EventId)">
                             Удалить
                         </button>
                         <button type="button" class="btn btn-link"
@@ -168,7 +168,8 @@
         function init(){
              eventsMap = new ymaps.Map("eventsPageCalendar", {
                 center: [53.89, 27.56],
-                zoom: 6
+                 zoom: 6,
+                 controls: ['zoomControl', 'searchControl', 'typeSelector', 'rulerControl', 'geolocationControl']
             }, {
                 // Ограничим область карты.
                 restrictMapArea: [[50, 21], [58, 34]]
@@ -211,7 +212,6 @@
             // } ограничить страной
 
 
-            var myPlacemark
 
             @foreach (var item in Model)
             {
@@ -239,7 +239,7 @@
         var myPlacemark = new ymaps.Placemark([lat, lon], {
         // Чтобы балун и хинт открывались на метке, необходимо задать ей определенные свойства.
 
-            balloonContentHeader: name,
+            balloonContentHeader: name + " [" + id + "]",
             balloonContentBody: date+ " <br>" + descr,
             balloonContentFooter: '<button type="button" class="btn btn-link"\
                                     onclick="GetInfoEventForm(' + eventId+ ')">\
@@ -248,9 +248,11 @@
             hintContent: name
         });
         myPlacemark.id = eventId;
+
         myPlacemark.events.add('click', function () {
             //alert(myPlacemark.id);
         });
+
         eventsMap.geoObjects.add(myPlacemark);
     }
 

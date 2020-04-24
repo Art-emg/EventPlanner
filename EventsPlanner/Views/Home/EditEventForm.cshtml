@@ -53,9 +53,7 @@
     </div>
 
     <div class="form-group">
-        <a class="btn btn-xs btn-primary openMapSelectLocation" data-fancybox data-modal="true" data-src="#modalInEvent" href="javascript:;">
-            <i class="glyphicon glyphicon-plus"></i>
-        </a>
+
 
         <div style="display: none;max-width:600px; padding:5px" id="modalInEvent">
             <h3>Выберете местоположение!</h3>
@@ -63,8 +61,25 @@
             <p><button data-fancybox-close class="btn btn-success">Добавть</button></p>
         </div>
 
+        @*<a class="btn btn-xs btn-primary openMapSelectLocation" data-fancybox data-modal="true" data-src="#modalInEvent" href="javascript:;">
+            <i class="glyphicon glyphicon-plus"></i>
+        </a>
         <label for="descrEvent">Местоположение : </label><br>
-        <span id="textEventLocationAddress">...</span>
+        <span id="textEventLocationAddress">...</span>*@
+
+
+        <a  class="btn-link openMapSelectLocation" data-fancybox data-modal="true" data-src="#modalInEvent" href="javascript:;" style="cursor:pointer">
+
+
+            <label style="font-size:14px; cursor:inherit; color:#333333">
+                
+                Местоположение <i class="glyphicon glyphicon-map-marker"></i> :
+                <span id="textEventLocationAddress" style=" color:#818181; font-size:13px; font-weight:100">...</span>&nbsp;
+
+            </label>
+        </a>
+
+
 
         <input type="hidden" name="Latitude" id="latitude-input" />
         <input type="hidden" name="Longitude" id="longitude-input" />
@@ -73,7 +88,7 @@
         {
             <input type="hidden" name="WeatherRegion" id="weatherRegion-input" value="@ViewBag.Event.WeatherRegion" />
             <input type="hidden" name="WeatherNight" id="weatherNight-input" value="@ViewBag.Event.WeatherNight" />
-            <input type="hidden" name="WeatherDay" id="weatherDay-input"  value="@ViewBag.Event.WeatherDay"/>
+            <input type="hidden" name="WeatherDay" id="weatherDay-input" value="@ViewBag.Event.WeatherDay" />
         }
         else
         {
@@ -248,7 +263,8 @@
         function init(){
             var myPlacemark, eventSelectMap = new ymaps.Map("mapSelectEventLocation", {
                 center: [53.89, 27.56],
-                zoom: 6
+                zoom: 6,
+                controls: ['zoomControl', 'searchControl', 'typeSelector', 'rulerControl', 'geolocationControl']
             }, {
                 // Ограничим область карты.
                 restrictMapArea: [[50, 21], [58, 34]]

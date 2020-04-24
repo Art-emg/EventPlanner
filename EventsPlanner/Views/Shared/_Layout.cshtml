@@ -56,18 +56,23 @@
                 }
             <div class="navbar-text">
                 <div class="form-inline">
-                    <a class="btn btn-xs btn-primary openMapSelectLocation" data-fancybox data-modal="true" data-src="#modalCurrentLocation" href="javascript:;">
-                        <i class="glyphicon glyphicon-plus"></i>
-                    </a>
 
-                    <div style="display: none;max-width:600px; padding:5px" id="modalCurrentLocation">
-                        <h3>Ввше местоположение</h3>
+
+                    <div style="display: none;max-width:600px; padding:5px; background-color:rgba(255, 255, 255, 0.80)" id="modalCurrentLocation">
+                        <h3>Ваше местоположение</h3>
                         <div id="mapSelectCurrentUserLocation" style="width:500px; height:500px;"></div>
-                        <p><button data-fancybox-close class="btn btn-success">Добавть</button></p>
+                        <p><button data-fancybox-close class="btn  btn-success">Добавить</button></p>
                     </div>
 
-                    <label>Местоположение : </label>
-                    <span id="textCurrentLocationAddress">...</span>
+                    <a  class="btn-link openMapSelectLocation" data-fancybox data-modal="true" data-src="#modalCurrentLocation" href="javascript:;" style="position: absolute; cursor:pointer">
+                        <i class="glyphicon glyphicon-map-marker"></i>
+
+                        <label style="font-size:12px; cursor:inherit ">
+                            Местоположение :
+                            <span id="textCurrentLocationAddress" style=" color:#818181; font-size:12px; font-weight:100">...</span>&nbsp;
+
+                        </label>
+                    </a>
 
                 </div>
             </div>
@@ -108,7 +113,8 @@
 
             var myPlacemark, currentLocationSelectMap = new ymaps.Map("mapSelectCurrentUserLocation", {
                 center: [54.00, 27.00],
-                zoom: 4
+                zoom: 4,
+                controls: ['zoomControl', 'searchControl', 'typeSelector', 'rulerControl', 'geolocationControl']
             }, {
                 // Ограничим область карты.
                 restrictMapArea: [[50, 21], [58, 34]]
@@ -178,7 +184,6 @@
             }
             currentLocationSelectMap.geoObjects.add(myPlacemark);
 
-            currentLocationSelectMap.geoObjects.add(myPlacemark);
 
             myPlacemark.events.add('dragend', function () {
                 getAddress(myPlacemark.geometry.getCoordinates());
@@ -192,7 +197,7 @@
                     firstGeoObject.getThoroughfare() || firstGeoObject.getPremise()
                 ].filter(Boolean).join(', ');
 
-                $("#textCurrentLocationAddress").text((firstGeoObject.getLocalities().length ? firstGeoObject.getLocalities() : firstGeoObject.getAdministrativeAreas().replace('Беларусь-','')));
+                $("#textCurrentLocationAddress").text((firstGeoObject.getLocalities().length ? firstGeoObject.getLocalities() : firstGeoObject.getAdministrativeAreas()));
 
                 myPlacemark.properties
                     .set({
@@ -240,7 +245,7 @@
                 myPlacemark.properties.set('iconCaption', 'поиск...');
                 ymaps.geocode(coords).then(function (res) {
                     var firstGeoObject = res.geoObjects.get(0);
-                    $("#textCurrentLocationAddress").text((firstGeoObject.getLocalities().length ? firstGeoObject.getLocalities() : firstGeoObject.getAdministrativeAreas().replace('Беларусь-','')));
+                    $("#textCurrentLocationAddress").text((firstGeoObject.getLocalities().length ? firstGeoObject.getLocalities() : firstGeoObject.getAdministrativeAreas()));
                     myPlacemark.properties
                         .set({
                             // Формируем строку с данными об объекте.

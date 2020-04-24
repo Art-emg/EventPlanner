@@ -40,8 +40,16 @@ function EventDelete(eventId) {
         url: "/Home/DelEvent/" + eventId,
         success: function (data) {
             $('#event-form').html('<small style="color:#b8b8b8">Удалено.</small>');
+
+            //удаление из списка
             $('#eventsTable').find()
             $('#eventsTable>tbody>tr>td').filter(function () { return $(this).text().trim() == eventId }).parent().remove()
+
+            // удаление из карты
+            eventsMap.geoObjects.each(function (element, index) {
+                if (element.id == eventId)
+                    eventsMap.geoObjects.remove(element);
+            })
         }
     });
 }
