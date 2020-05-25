@@ -53,7 +53,15 @@
     </div>
 
     <div class="form-group">
-
+        <label for="switcher">Место проведения:</label>
+        <div id="switcher" style="margin:5px 5px 5px 5px; display:inline-block;">
+            <img style="width:35px" src="https://img.icons8.com/color/48/000000/nature.png" title="Фотосессия на природе" />
+            <div class="material-switch" style="display:inline-block">
+                <input id="indoorEventInput" name="IndoorEvent" type="checkbox" />
+                <label for="indoorEventInput" class="label-default"></label>
+            </div>
+            <img style="width:35px; margin-left:7px;" src="https://img.icons8.com/color/48/000000/city.png" title="Фотосессия в здании" />
+        </div>
 
         <div style="display: none;max-width:600px; padding:5px" id="modalInEvent">
             <h3>Выберете местоположение!</h3>
@@ -61,18 +69,11 @@
             <p><button data-fancybox-close class="btn btn-success">Добавть</button></p>
         </div>
 
-        @*<a class="btn btn-xs btn-primary openMapSelectLocation" data-fancybox data-modal="true" data-src="#modalInEvent" href="javascript:;">
-            <i class="glyphicon glyphicon-plus"></i>
-        </a>
-        <label for="descrEvent">Местоположение : </label><br>
-        <span id="textEventLocationAddress">...</span>*@
-
-
-        <a  class="btn-link openMapSelectLocation" data-fancybox data-modal="true" data-src="#modalInEvent" href="javascript:;" style="cursor:pointer">
+        <a class="btn-link openMapSelectLocation" data-fancybox data-modal="true" data-src="#modalInEvent" href="javascript:;" style="cursor:pointer">
 
 
             <label style="font-size:14px; cursor:inherit; color:#333333">
-                
+
                 Местоположение <i class="glyphicon glyphicon-map-marker"></i> :
                 <span id="textEventLocationAddress" style=" color:#818181; font-size:13px; font-weight:100">...</span>&nbsp;
 

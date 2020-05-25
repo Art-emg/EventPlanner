@@ -23,6 +23,22 @@
             }
             ]
         </dd>
+        <dd> @*просто для пустого места*@</dd>
+        <dt>Тип профиля:</dt>
+        <dd>
+            Фотограф <span style="padding-left:3px;padding-bottom:-10px;font-size:17px" class="glyphicon glyphicon-camera"></span>   [@Html.ActionLink("Переключится на профиль фотомодели", "#")]
+        </dd>
+
+        <dd> @*просто для пустого места*@</dd>
+
+        <dt>E-mail оповещения:</dt>
+        <dd>
+               <div class="material-switch" style="display:inline-block">
+                    <input id="notifocationCheck"" type="checkbox" />
+                    <label for="notifocationCheck" class="label-default"></label>
+                </div>
+
+        </dd>
         @*<dt>Внешние имена входа:</dt>
         <dd>
             @Model.Logins.Count [

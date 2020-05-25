@@ -82,6 +82,10 @@ namespace EventsPlanner.Models
         [Display(Name = "Подтверждение пароля")]
         [Compare("Password", ErrorMessage = "Пароль и его подтверждение не совпадают.")]
         public string ConfirmPassword { get; set; }
+
+        [Required]
+        [Display(Name = "Тип пользователя")]
+        public string UserType { get; set; }
     }
 
     public class ResetPasswordViewModel

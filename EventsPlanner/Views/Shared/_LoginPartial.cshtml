@@ -7,7 +7,25 @@
 
     <ul class="nav navbar-nav navbar-right">
         <li>
-            @Html.ActionLink("Здравствуйте " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
+            <a href="Chat" style="padding:12px"><img width="32" height="26" src="https://img.icons8.com/fluent/48/000000/chat.png" /></a>
+        </li>
+
+
+        @if (User.IsInRole("Administrator"))
+        {
+                <li class="dropdown" style="background-color:#ffedba">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false">Администратор <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li>@Html.ActionLink("Все события", "Events", "Admin")</li>
+                        <li role="separator" class="divider"></li>
+                        <li>@Html.ActionLink("Все пользователи", "Users", "Admin")</li>
+                    </ul>
+                </li>
+        }
+        <li>
+            @*@Html.ActionLink(User.Identity.GetUserName(), "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })*@
+            <a href="Manage/Index" style="padding:14px" type="Управление аккаунтом">@User.Identity.GetUserName() <span style="padding-left:3px;font-size:17px" class="glyphicon glyphicon-camera"></span></a>
         </li>
         <li><a href="javascript:document.getElementById('logoutForm').submit()">Выйти</a></li>
     </ul>

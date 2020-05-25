@@ -36,12 +36,22 @@
         </div>
     </div>
     <div class="form-group">
+        @Html.LabelFor(m => m.UserType , new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.RadioButtonFor(model => model.UserType, "photograph", new { id = "photographInput" })
+            @Html.Label("photographInput", "Фотограф")<span style="padding-left:10px" class="glyphicon glyphicon-camera"></span>
+            <br />
+            @Html.RadioButtonFor(model => model.UserType, "photomodel", new { id = "modelInput" })
+            @Html.Label("modelInput", "Фотомодель")<span style="padding-left:10px" class="glyphicon glyphicon-user"></span>
+        </div>
+    </div>
+    <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
             <input type="submit" class="btn btn-default" value="Регистрация" />
         </div>
     </div>
-}
+ }
 
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}
+        @section Scripts {
+            @Scripts.Render("~/bundles/jqueryval")
+        }

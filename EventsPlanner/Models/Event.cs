@@ -33,6 +33,9 @@ namespace EventsPlanner.Models
         public string Description { get; set; }
 
         [JsonIgnore]
+        public bool IndoorEvent { get; set; }
+
+        [JsonIgnore]
         public string Latitude { get; set; }
         [JsonIgnore]
         public string Longitude { get; set; }

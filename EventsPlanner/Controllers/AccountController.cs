@@ -155,22 +155,26 @@ namespace EventsPlanner.Controllers
                 var user = new ApplicationUser { UserName = model.UserName,
                                                  Email = model.Email, 
                                                  LockoutEnabled = false, 
-                                                 LockoutEndDateUtc = DateTime.Parse("31.12.2099 0:00:00") };
+                                                 LockoutEndDateUtc = DateTime.Parse("31.12.2099 0:00:00"),
+                                                 Notifications = true,
+                                                 UserType = model.UserType};
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-
                     if (user.UserName == "root")
                     {
                         var RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>());
 
                         if (!RoleManager.RoleExists("Administrator"))
                         {
-                             RoleManager.Create(new IdentityRole("Administrator"));
-                        }                      
+                            RoleManager.Create(new IdentityRole("Administrator"));
+                        }
                         UserManager.AddToRole(user.Id, "Administrator");
                     }
+
+                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
+
+                    
                     return RedirectToAction("Index", "Home");
                 }
                 AddErrors(result);

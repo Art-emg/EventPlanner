@@ -34,25 +34,14 @@
                 <img src="https://img.icons8.com/nolan/64/compact-camera.png" style="float:left; width:50px;"/>
                 @Html.ActionLink("PhotoPlanner", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
+
             <div class="navbar-collapse collapse">
+                @if (Request.IsAuthenticated)
+                {
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Главная", "Index", "Home")</li>
                     <li>@Html.ActionLink("Мои события", "Events", "Home")</li>
                 </ul>
-
-                @if (User.IsInRole("Administrator"))
-                {
-                    <ul class="nav navbar-nav" style="background-color:#ffedba">
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                               aria-expanded="false">Администратор <span class="caret"></span></a>
-                            <ul class="dropdown-menu">
-                                <li>@Html.ActionLink("Все события", "Events", "Admin")</li>
-                                <li role="separator" class="divider"></li>
-                                <li>@Html.ActionLink("Все пользователи", "Users", "Admin")</li>
-                            </ul>
-                        </li>
-                    </ul>
                 }
             <div class="navbar-text">
                 <div class="form-inline">
@@ -61,7 +50,7 @@
                     <div style="display: none;max-width:600px; padding:5px; background-color:rgba(255, 255, 255, 0.80)" id="modalCurrentLocation">
                         <h3>Ваше местоположение</h3>
                         <div id="mapSelectCurrentUserLocation" style="width:500px; height:500px;"></div>
-                        <p><button data-fancybox-close class="btn  btn-success">Добавить</button></p>
+                        <p><button data-fancybox-close class="btn  btn-success">Закртыть</button></p>
                     </div>
 
                     <a  class="btn-link openMapSelectLocation" data-fancybox data-modal="true" data-src="#modalCurrentLocation" href="javascript:;" style="position: absolute; cursor:pointer">

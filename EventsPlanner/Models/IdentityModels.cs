@@ -18,6 +18,9 @@ namespace EventsPlanner.Models
             return userIdentity;
         }
 
+        public bool Notifications { get; set; }
+        public string UserType { get; set; }
+
     }
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>

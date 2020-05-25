@@ -16,7 +16,6 @@ namespace EventsPlanner.Models
         public string CreatorId { get; set; }
 
 
-
         public Event Event { get; set; }
 
     }

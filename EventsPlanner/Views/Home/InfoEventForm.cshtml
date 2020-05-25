@@ -3,13 +3,13 @@
 
     @if (ViewBag.Event.WeatherRegion != null)
     {
-    <div style="height:90px; width:70px; background-color:#f9f9f9; float:right">
-        <div class="weatherCalendarDiv" style="     ">
-            <img style="margin-left:3px; height:65px;" src="https://img.icons8.com/color/48/000000/partly-cloudy-day.png" title="Частично облачно">
-            <span style="font-size:18px; padding-left:5px;">@ViewBag.Event.WeatherDay°</span>
-            <span style="color: #949494; font-size: 16px; padding-right: 5px; float:right; margin-top:2px;">@ViewBag.Event.WeatherNight°</span>
+        <div style="height:90px; width:70px; background-color:#f9f9f9; float:right">
+            <div class="weatherCalendarDiv" style="     ">
+                <img style="margin-left:3px; height:65px;" src="https://img.icons8.com/color/48/000000/partly-cloudy-day.png" title="Частично облачно">
+                <span style="font-size:18px; padding-left:5px;">@ViewBag.Event.WeatherDay°</span>
+                <span style="color: #949494; font-size: 16px; padding-right: 5px; float:right; margin-top:2px;">@ViewBag.Event.WeatherNight°</span>
+            </div>
         </div>
-    </div>
     }
 
 
@@ -27,6 +27,20 @@
 
         @ViewBag.Event.EndDate.ToString("H:mm")
     </p>
+    @if (ViewBag.Event.IndoorEvent)
+    {
+        <p>
+            Место проведения:  <img style="width:35px; padding-bottom:10px; " src="https://img.icons8.com/color/48/000000/city.png" title="Фотосессия в здании" /> 
+                               <span style="color:darkgrey">(В здании)</span>
+        </p>    
+    }else
+    {
+        <p>
+            Место проведения: <img style="width:35px; padding-bottom:10px;" src="https://img.icons8.com/color/48/000000/nature.png" title="Фотосессия на природе" />
+                              <span style="color:darkgrey">(На природе)</span>
+        </p>
+    }
+
     @if (ViewBag.Event.Latitude != null && ViewBag.Event.Longitude != null)
     {
         <p id="locationInfoString">
