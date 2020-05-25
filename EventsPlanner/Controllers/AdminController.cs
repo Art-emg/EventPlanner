@@ -23,6 +23,7 @@ namespace EventsPlanner.Controllers
         {
             return View(eventContext.Events.ToList());
         }
+
         public ActionResult InfoEventForm(int id)
         {
             string currentUser = User.Identity.GetUserId();
@@ -59,10 +60,13 @@ namespace EventsPlanner.Controllers
         public ActionResult Users()
         {
             return View(UsersContext.Users.ToList());
-            
+           
+        }
+        public ActionResult UserEdit(string id)
+        {
+            return View(UsersContext.Users.Where(p => p.Id == id));
         }
 
-        [HttpGet]
         public ActionResult UserBlock (Guid userId, bool block)
         {
             ApplicationUser currentUser = UsersContext.Users.Find(userId.ToString());

@@ -25,8 +25,11 @@ namespace EventsPlanner.Controllers
             return View(userEvents);
         }
 
-        public ActionResult Event(int EventId)
+        public ActionResult Event(int Id)
         {
+            Message message = new Message() { MessageDateTime = DateTime.Now, MessageText = "dfsdf", EventId = 1 , UserId="dfdf"};
+            messageContext.Messages.Add(message);
+            messageContext.SaveChanges();
 
             return View(eventContext.Events);
         }
