@@ -31,7 +31,7 @@ namespace EventsPlanner.Controllers
             messageContext.Messages.Add(message);
             messageContext.SaveChanges();
 
-            return View(eventContext.Events);
+            return View();
         }
 
         [HttpPost]

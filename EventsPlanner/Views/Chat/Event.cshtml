@@ -1,42 +1,180 @@
 ﻿@model IEnumerable<EventsPlanner.Models.Message>
 
 @{
-    ViewBag.Title = "Event";
+    ViewBag.Title = "День рождения";
 }
 
-<h2>Event</h2>
+<h2>День рождениe</h2>
+<div class="row">
+    <div class="col-md-10">
+        <table class="table">
+            <tr style="background-color:aliceblue">
+                <th style="width:100px">
+                    Отправил
+                </th>
+                <th style="width:170px">
+                    Время
+                </th>
+                <th>
+                    Сообщения
+                </th>
+            </tr>
 
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.EventId)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.UserId)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.MessageDateTime)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.MessageText)
-        </th>
-    </tr>
+            <tr>
+                <td>
+                    Artem
+                </td>
+                <td>
+                    30.04.2020 0:00:00
+                </td>
+                <td>
+                    Привет. Известно что-нб про данные?
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Vasya
+                </td>
+                <td>
+                    30.04.2020 0:00:00
+                </td>
+                <td>
+                    Привет. Нет
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Artem
+                </td>
+                <td>
+                    30.04.2020 0:00:00
+                </td>
+                <td>
+                    а теперь?
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Vasya
+                </td>
+                <td>
+                    30.04.2020 0:00:00
+                </td>
+                <td>
+                    тоже нет?
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.EventId)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.UserId)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.MessageDateTime)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.MessageText)
-        </td>
-    </tr>
-}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Artem
+                </td>
+                <td>
+                    30.04.2020 0:00:00
+                </td>
+                <td>
+                    а теперь?
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Vasya
+                </td>
+                <td>
+                    30.04.2020 0:00:00
+                </td>
+                <td>
+                    тоже нет?
 
-</table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Artem
+                </td>
+                <td>
+                    3030.04.2020 12:23:12
+                </td>
+                <td>
+                    а теперь?
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Vasya
+                </td>
+                <td>
+                    30.04.2020 12:23:12
+                </td>
+                <td>
+                    тоже нет?
+
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Artem
+                </td>
+                <td>
+                    30.04.2020 12:23:12
+                </td>
+                <td>
+                     а как с деньгами обстоит вопрос?
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Vasya
+                </td>
+                <td>
+                    30.04.2020 12:23:12
+                </td>
+                <td>
+                    какими деньгми?
+
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Artem
+                </td>
+                <td>
+                    30.04.2020 12:23:12
+                </td>
+                <td>
+                    оплата
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Vasya
+                </td>
+                <td>
+                    30.04.2020 0:00:00
+                </td>
+                <td>
+                    сегодня уточню
+
+                </td>
+            </tr>
+
+        </table>
+    </div>
+
+    <div class="col-md-2">
+        <h4>Участники чата</h4>
+        <ul>
+            <li>Artem</li>
+            <li>Pasha</li>
+            <li>Vasya</li>
+        </ul>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-10">
+        <textarea style="max-width:1300px;width:100%"></textarea>
+    </div>
+    <div class="col-md-2">
+        <input type="button" name="name" value="Отправить" style="width:100%" />
+    </div>
+</div>
