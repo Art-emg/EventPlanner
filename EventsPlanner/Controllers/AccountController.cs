@@ -161,9 +161,17 @@ namespace EventsPlanner.Controllers
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
+                    var RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>());
+
+                    if (!RoleManager.RoleExists(model.UserType))
+                    {
+                        RoleManager.Create(new IdentityRole(model.UserType));
+                    }
+                    UserManager.AddToRole(user.Id, model.UserType);
+
                     if (user.UserName == "root")
                     {
-                        var RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>());
+                        
 
                         if (!RoleManager.RoleExists("Administrator"))
                         {

@@ -57,12 +57,11 @@ namespace EventsPlanner.Controllers
                .Where(ue => ue.EventId == id && ue.UserId != ue.CreatorId)
                .Select(ue => ue.UserId).ToList();
 
-            List<string> invitdUsername = new List<string>();
-
+            List<ApplicationUser> invitdUsers = new List<ApplicationUser>();
             foreach (string invitedId in invitedID)
-                invitdUsername.Add(System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(invitedId).UserName);
+                invitdUsers.Add(System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(invitedId));
 
-            ViewBag.InvitedUserNames = invitdUsername;
+            ViewBag.InvitedUsers = invitdUsers;
             ViewBag.CreatorUserName = creatorUsername;
 
             return PartialView();
@@ -95,7 +94,6 @@ namespace EventsPlanner.Controllers
             string currentUser = User.Identity.GetUserId();
             ViewBag.UserNames = UsersContext.Users
                 .Where(p => p.Id != currentUser).ToList().Select(p => p.UserName);
-
             return PartialView("EditEventForm");
         }
 
@@ -104,11 +102,27 @@ namespace EventsPlanner.Controllers
         public ActionResult AddEventForm(string startDate)
         {
             string currentUser = User.Identity.GetUserId();
+            /// Для не фотографа запрет на создание
+            if (!User.IsInRole("Photographer")) 
+            {
+                DateTime dateTime = DateTime.Parse(startDate).Date;
+
+               IEnumerable<Event> invitedEvents = userEventContext.UserEvents
+                    .Where(ue => ue.UserId == currentUser && ue.CreatorId != currentUser)
+                    .Select(ue => ue.Event)
+                    .Where(p => DbFunctions.TruncateTime(p.StartDate) <= dateTime && DbFunctions.TruncateTime(p.EndDate) >= dateTime).ToList();
+
+                ViewBag.Date = dateTime;
+                ViewBag.InvitedEvents = invitedEvents;
+                return PartialView("ListEventsForm"); 
+            }
+
             ViewBag.UserNames = UsersContext.Users
                 .Where(p => p.Id != currentUser).ToList().Select(p => p.UserName);
             ViewBag.EventStartDate = DateTime.Parse(startDate).ToString("dd.MM.yyyy H:mm");
             ViewBag.EventEndDate = DateTime.Parse(startDate).ToString("dd.MM.yyyy H:mm");
-            ///
+            
+
             return PartialView("EditEventForm");
         }
 
@@ -117,10 +131,32 @@ namespace EventsPlanner.Controllers
         public ActionResult AddEventForm(string startDate, string endDate)
         {
             string currentUser = User.Identity.GetUserId();
+
+            /// Для не фотографа запрет на создание
+            if (!User.IsInRole("Photographer"))
+            {
+                DateTime startRangeDate= DateTime.Parse(startDate).Date;
+                DateTime endRangeDate = DateTime.Parse(endDate).Date;
+
+                IEnumerable<Event> invitedEvents = userEventContext.UserEvents
+                     .Where(ue => ue.UserId == currentUser && ue.CreatorId != currentUser)
+                     .Select(ue => ue.Event)
+                     .Where(p => DbFunctions.TruncateTime(p.StartDate) <= startRangeDate && DbFunctions.TruncateTime(p.EndDate) >= endRangeDate).ToList();
+
+                ViewBag.Date = startRangeDate;
+                if (startRangeDate != endRangeDate)
+                    ViewBag.EndRangeDate = endRangeDate;
+
+                ViewBag.InvitedEvents = invitedEvents;
+                return PartialView("ListEventsForm");
+            }
+
             ViewBag.UserNames = UsersContext.Users
                 .Where(p=>p.Id!= currentUser).ToList().Select(p => p.UserName);
             ViewBag.EventStartDate = DateTime.Parse(startDate).ToString("dd.MM.yyyy H:mm");
             ViewBag.EventEndDate = DateTime.Parse(endDate).ToString("dd.MM.yyyy H:mm");
+
+
             return PartialView("EditEventForm");
         }
 
@@ -128,6 +164,7 @@ namespace EventsPlanner.Controllers
         [HttpGet]
         public ActionResult EditEventForm(int id)
         {
+            
             Event ev = eventContext.Events.Find(id);
             ViewBag.IsEditForm = true;
             ViewBag.EventId = ev.EventId;
@@ -137,7 +174,9 @@ namespace EventsPlanner.Controllers
             ViewBag.EventDescr = ev.Description;
             ViewBag.EventLatitude = ev.Latitude;
             ViewBag.EventLongitude = ev.Longitude;
+            ViewBag.IndoorEvent = ev.IndoorEvent;
             ViewBag.Event = ev;
+
 
             return PartialView();
         }
@@ -250,6 +289,7 @@ namespace EventsPlanner.Controllers
             editEvent.EndDate = ev.EndDate;
             editEvent.Description = ev.Description;
             editEvent.Latitude = ev.Latitude ?? editEvent.Latitude;
+            editEvent.IndoorEvent = ResizeOrDrug ? editEvent.IndoorEvent : ev.IndoorEvent;
             editEvent.Longitude = ev.Longitude ?? editEvent.Longitude;
             editEvent.WeatherRegion = ev.WeatherRegion ?? editEvent.WeatherRegion;
 

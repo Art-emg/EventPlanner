@@ -60,10 +60,11 @@ function EventDelete(eventId) {
         }
     });
 }
-
+var debug, debug2;
 function AddEventEndEditCalendar(form) {
     $('#event-form').html(loader_div);
-
+    debug = form;
+    debug2 = form.serialize();
     var url = "/Home/AddEvent";
     $.ajax({
         type: "POST",

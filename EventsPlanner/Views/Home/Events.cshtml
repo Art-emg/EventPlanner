@@ -16,7 +16,19 @@
     @Scripts.Render("~/Scripts/Libs/bootstrap-datetimepicker.js")
     @Scripts.Render("~/Scripts/weather-functions.js")
 }
+    <style>
+        thead, tbody { display: block; width:100% }
 
+        thead{
+            background-color:aliceblue;
+
+        }
+        tbody {
+            height: 400px; /* Just for the demo          */
+            overflow-y: auto; /* Trigger vertical scroll    */
+            /*overflow-x: hidden;*/ /* Hide the horizontal scroll */
+        }
+    </style>
 
 <div class="row " style="margin:30px 0px; min-height:560px">
     <div class="col-md-8">
@@ -32,57 +44,59 @@
       
 
         <table class="table" id="eventsTable">
-            <tr>
-                <th>
-                    ID
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Name)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.StartDate)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.EndDate)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Description)
-                </th>
-                <th></th>
-            </tr>
-
-            @foreach (var item in Model)
-            {
+            <thead>
                 <tr>
-                    <td>
-                        @item.EventId
-                    </td>
-                    <td>
-                        @item.Name
-                    </td>
-                    <td>
-                        @item.StartDate
-                    </td>
-                    <td>
-                        @item.EndDate
-                    </td>
-                    <td>
-                        @item.Description
-                    </td>
-                    <td>
-                        <button type="button" class="btn btn-link"
-                                onclick="EventDelete(@item.EventId)">
-                            Удалить
-                        </button>
-                        <button type="button" class="btn btn-link"
-                                onclick="GetInfoEventForm(@item.EventId)">
-                            Показать
-                        </button>
-
-                    </td>
+                    <th>
+                        ID
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Name)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.StartDate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.EndDate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Description)
+                    </th>
+                    <th></th>
                 </tr>
-            }
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                 {
+                    <tr>
+                        <td>
+                            @item.EventId
+                        </td>
+                        <td>
+                            @item.Name
+                        </td>
+                        <td>
+                            @item.StartDate
+                        </td>
+                        <td>
+                            @item.EndDate
+                        </td>
+                        <td>
+                            @item.Description
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-link"
+                                    onclick="EventDelete(@item.EventId)">
+                                Удалить
+                            </button>
+                            <button type="button" class="btn btn-link"
+                                    onclick="GetInfoEventForm(@item.EventId)">
+                                Показать
+                            </button>
 
+                        </td>
+                    </tr>
+                 } 
+            </tbody>
         </table>
 
         <div id="eventsPageCalendar" style="height:600px; display:none;"></div>
@@ -90,7 +104,7 @@
 
     </div>
     <div class="col-md-4">
-        <div id="event-form" style="margin-top: 50px !important; position:fixed; width:350px">
+        <div id="event-form" style="margin-top: 50px !important; width:350px">
             <span style="font-size:24px; font-weight:100  !important">
                 <small style="color:#b8b8b8">Выбирете событие.</small>
             </span>

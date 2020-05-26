@@ -26,15 +26,25 @@
         <dd> @*просто для пустого места*@</dd>
         <dt>Тип профиля:</dt>
         <dd>
-            Фотограф <span style="padding-left:3px;padding-bottom:-10px;font-size:17px" class="glyphicon glyphicon-camera"></span>   [@Html.ActionLink("Переключится на профиль фотомодели", "#")]
-        </dd>
+
+            @if (User.IsInRole("Photographer"))
+            {
+                <Text> Фотограф <span style="padding-left:3px;padding-bottom:-10px;font-size:17px" class="glyphicon glyphicon-camera"></span>
+                [@Html.ActionLink("Переключится на профиль фотомодели", "#")]</Text>
+            }
+            else
+            {
+                <Text> Фотомодель <span style="padding-left:3px;padding-bottom:-10px;font-size:17px" class="glyphicon glyphicon-user"></span>
+                    [@Html.ActionLink("Переключится на профиль фотографа", "#")
+                </Text>}
+            </dd>
 
         <dd> @*просто для пустого места*@</dd>
 
         <dt>E-mail оповещения:</dt>
         <dd>
                <div class="material-switch" style="display:inline-block">
-                    <input id="notifocationCheck"" type="checkbox" />
+                    <input id="notifocationCheck"" type="checkbox"checked />
                     <label for="notifocationCheck" class="label-default"></label>
                 </div>
 
