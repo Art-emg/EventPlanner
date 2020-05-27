@@ -1,28 +1,35 @@
-﻿@model IEnumerable<EventsPlanner.Models.Message>
+﻿
+@model IEnumerable<EventsPlanner.Models.Message>
+@using Microsoft.AspNet.Identity.Owin;
+
 
 @{
-    ViewBag.Title = "День рождения";
+    //ViewBag.Title = "День рождения";
 }
 
 <style>
-thead, tbody { display: block; width:100% }
+    table{width:100%}
+    thead, tbody {
+        display: block;
+        width: 100%
+    }
 
-thead{
-    background-color:aliceblue;
+    thead {
+        background-color: aliceblue;
+    }
 
-}
-tbody {
-    height: 400px; /* Just for the demo          */
-    overflow-y: auto; /* Trigger vertical scroll    */
-    /*overflow-x: hidden;*/ /* Hide the horizontal scroll */
-}
+    tbody {
+        height: 400px; /* Just for the demo          */
+        overflow-y: auto; /* Trigger vertical scroll    */
+        overflow-x: hidden; /* Hide the horizontal scroll */
+    }
 </style>
-<h2>День рождениe</h2>
+<h2>@ViewBag.Title</h2>
 <div class="row">
     <div class="col-md-10">
-        <table class="table" >
-            <thead> 
-                <tr >
+        <table class="table">
+            <thead>
+                <tr>
                     <th style="width:100px">
                         Отправил
                     </th>
@@ -33,19 +40,19 @@ tbody {
                         Сообщения
                     </th>
                 </tr>
-                </thead>
+            </thead>
             <tbody>
-                @for (int i = 0; i < 40; i++)
+                @foreach (var item in Model)
                 {
                     <tr>
                         <td style="width:100px">
-                            Artem
+                            @ViewBag.Users[item.UserId]
                         </td>
                         <td style="width:170px">
-                            30.04.2020 0:00:00
+                            @item.MessageDateTime
                         </td>
                         <td>
-                            Привет. Известно что-нб про данные?dszvdvfaddddddddddddddddddddddsdfvfd wrad sfdg serdf gstedh strdh sd
+                            @item.MessageText
                         </td>
                     </tr>
                 }
@@ -55,20 +62,32 @@ tbody {
         </table>
     </div>
 
+    <script type="text/javascript">
+        var block = document.getElementsByTagName("tbody")[0];
+        block.scrollTop = block.scrollHeight;
+    </script>
     <div class="col-md-2">
         <h4>Участники чата</h4>
         <ul>
-            <li>Artem</li>
-            <li>Pasha</li>
-            <li>Vasya</li>
+            @if (ViewBag.Users != null)
+            {
+                foreach (var i in ViewBag.Users.Keys)
+                {
+
+                    <li>@ViewBag.Users[i]</li>
+                }
+            }
         </ul>
     </div>
 </div>
 <div class="row">
-    <div class="col-md-10">
-        <textarea style="max-width:1300px;width:100%"></textarea>
-    </div>
-    <div class="col-md-2">
-        <input type="button" name="name" value="Отправить" style="width:100%" />
-    </div>
+    <form action="/Chat/SendMessage" method="post">
+        <div class="col-md-10">
+            <textarea style="max-width:1300px;width:100%" name="TextMessage"></textarea>
+        </div>
+        <div class="col-md-2">
+            <input type="submit" value="Отправить" style="width:100%" />
+        </div>
+        <input type="hidden" name="EventId" value="@ViewBag.EventId" />
+    </form>
 </div>

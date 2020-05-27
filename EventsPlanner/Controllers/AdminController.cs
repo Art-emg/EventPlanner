@@ -64,7 +64,11 @@ namespace EventsPlanner.Controllers
         }
         public ActionResult UserEdit(string id)
         {
-            return View(UsersContext.Users.Where(p => p.Id == id));
+            return View(UsersContext.Users.Where(p => p.Id == id).Select(us => us).FirstOrDefault());
+        }
+        public ActionResult UserDetails(string id)
+        {
+            return View(UsersContext.Users.Where(p => p.Id == id).Select(us => us).FirstOrDefault());
         }
 
         public ActionResult UserBlock (Guid userId, bool block)

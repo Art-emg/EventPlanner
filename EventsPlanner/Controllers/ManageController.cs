@@ -322,6 +322,21 @@ namespace EventsPlanner.Controllers
             return result.Succeeded ? RedirectToAction("ManageLogins") : RedirectToAction("ManageLogins", new { Message = ManageMessageId.Error });
         }
 
+
+        // Смена типа аккаунта (фотограф/фотомодель)
+        [HttpPost]
+        public async Task<ActionResult> ChengeUserTypeAsync()
+        {
+
+            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+            if (user != null)
+            {
+            }
+            return View("Index");
+        }
+
+
+
         protected override void Dispose(bool disposing)
         {
             if (disposing && _userManager != null)

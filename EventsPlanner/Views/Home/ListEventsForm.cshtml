@@ -2,10 +2,10 @@
 
 <div class="animated fadeIn">
     <h4>
-        @ViewBag.Date.ToString("D") - 
+        @ViewBag.Date.ToString("D")  
         @if (ViewBag.EndRangeDate != null)
         {
-            @ViewBag.EndRangeDate.ToString("D")
+           <Text> - </Text> @ViewBag.EndRangeDate.ToString("D")
         }
         @if (User.IsInRole("Photographer"))
         {
@@ -37,7 +37,7 @@
                 </li>
              }
          }
-        @if (ViewBag.CreatedEvents != null)
+        @if (ViewBag.InvitedEvents != null)
          {
             foreach (var ev in ViewBag.InvitedEvents)
              {

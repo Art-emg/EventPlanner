@@ -141,7 +141,7 @@ namespace EventsPlanner.Controllers
                 IEnumerable<Event> invitedEvents = userEventContext.UserEvents
                      .Where(ue => ue.UserId == currentUser && ue.CreatorId != currentUser)
                      .Select(ue => ue.Event)
-                     .Where(p => DbFunctions.TruncateTime(p.StartDate) <= startRangeDate && DbFunctions.TruncateTime(p.EndDate) >= endRangeDate).ToList();
+                     .Where(p => DbFunctions.TruncateTime(p.StartDate) >= startRangeDate && DbFunctions.TruncateTime(p.EndDate) <= endRangeDate).ToList();
 
                 ViewBag.Date = startRangeDate;
                 if (startRangeDate != endRangeDate)
@@ -281,7 +281,7 @@ namespace EventsPlanner.Controllers
         [HttpPost]
         public ActionResult EditEvent(Event ev, bool ResizeOrDrug = false)
         {
-
+            
 
             Event editEvent = eventContext.Events.Find(ev.EventId);
             editEvent.Name = ev.Name;

@@ -27,7 +27,7 @@
             @*@Html.ActionLink(User.Identity.GetUserName(), "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })*@
             <a href="/Manage/Index" style="padding:14px" type="Управление аккаунтом">
                 @User.Identity.GetUserName()
-                @if (User.IsInRole("Photograph"))
+                @if (User.IsInRole("Photographer"))
                 {
                     <span style="padding-left:3px;font-size:17px" class="glyphicon glyphicon-camera"></span>
                 }
