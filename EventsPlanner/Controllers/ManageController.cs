@@ -331,6 +331,14 @@ namespace EventsPlanner.Controllers
             var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
             if (user != null)
             {
+                //if (user.Roles.Contains("Photographer"))
+                //{
+
+                //}
+                //else if (user.Roles.Contains("Photomodel"))
+                //{
+
+                //}
             }
             return View("Index");
         }

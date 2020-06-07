@@ -11,6 +11,8 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using EventsPlanner.Models;
+using System.Net.Mail;
+using System.Net;
 
 namespace EventsPlanner
 {
@@ -18,7 +20,22 @@ namespace EventsPlanner
     {
         public Task SendAsync(IdentityMessage message)
         {
-            // Подключите здесь службу электронной почты для отправки сообщения электронной почты.
+            try
+            {
+                MailAddress from = new MailAddress("photo.planner@mail.ru", "PhotoPlanner");
+                MailAddress to = new MailAddress(message.Destination);
+                MailMessage m = new MailMessage(from, to);
+                m.Subject = message.Subject;
+                m.IsBodyHtml = true;
+                m.Body = message.Body;
+                SmtpClient smtp = new SmtpClient("smtp.mail.ru", 2525);
+                smtp.Credentials = new NetworkCredential("photo.planner@mail.ru", "Pass1234Diplom");
+                smtp.EnableSsl = true;
+                smtp.Send(m);
+            }
+            catch (Exception e)
+            {
+            }
             return Task.FromResult(0);
         }
     }

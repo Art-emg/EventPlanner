@@ -66,6 +66,19 @@ namespace EventsPlanner.Controllers
         {
             return View(UsersContext.Users.Where(p => p.Id == id).Select(us => us).FirstOrDefault());
         }
+
+        [HttpPost]
+        public ActionResult UserEdit(ApplicationUser user)
+        {
+            ApplicationUser applicationUser = UsersContext.Users.Find(user.Id);
+
+            applicationUser.UserName = user.UserName;
+            applicationUser.Email = user.Email;
+            applicationUser.LockoutEnabled = user.LockoutEnabled;
+            applicationUser.LockoutEndDateUtc = user.LockoutEndDateUtc;
+            UsersContext.SaveChanges();
+            return View(UsersContext.Users.Where(p => p.Id == user.Id).Select(us => us).FirstOrDefault());
+        }
         public ActionResult UserDetails(string id)
         {
             return View(UsersContext.Users.Where(p => p.Id == id).Select(us => us).FirstOrDefault());

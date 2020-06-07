@@ -269,6 +269,17 @@ namespace EventsPlanner.Controllers
                         UserId = invitedId,
                         CreatorId = currentUser
                     });
+                    
+                    EmailService es = new EmailService();
+                    IdentityMessage im = new IdentityMessage()
+                    {
+                        Destination = UsersContext.Users.Find(invitedId).Email,
+                        Subject="Вас пригласили на фотосессию"
+                    };
+                    im.Body = $"Вас пригласили на фотосессию \"{ev.Name}\"! <p> Время: {ev.StartDate} </p>" +
+                    $"< p > Время конца: { ev.EndDate} </ p > " +
+                        $"\n <p>{ev.Description} </p>";
+                    es.SendAsync(im);
                 }
 
                 userEventContext.SaveChanges();
@@ -287,7 +298,7 @@ namespace EventsPlanner.Controllers
             editEvent.Name = ev.Name;
             editEvent.StartDate = ev.StartDate;
             editEvent.EndDate = ev.EndDate;
-            editEvent.Description = ev.Description;
+            editEvent.Description = ResizeOrDrug ? editEvent.Description : ev.Description;
             editEvent.Latitude = ev.Latitude ?? editEvent.Latitude;
             editEvent.IndoorEvent = ResizeOrDrug ? editEvent.IndoorEvent : ev.IndoorEvent;
             editEvent.Longitude = ev.Longitude ?? editEvent.Longitude;
@@ -302,7 +313,22 @@ namespace EventsPlanner.Controllers
                 editEvent.WeatherType = eventContext.WeatherTypes.Where(i => i.Description == dayTemperature.description).First();
             }
 
-            
+            var userEvents = userEventContext.UserEvents.Where(ue => ue.EventId == ev.EventId).Select(uv => uv);
+            foreach (var userInv in userEvents)
+            {
+                if (userInv.UserId== User.Identity.GetUserId())
+                    continue;
+                EmailService es = new EmailService();
+                IdentityMessage im = new IdentityMessage()
+                {
+                    Destination = UsersContext.Users.Find(userInv.UserId).Email,
+                    Subject = "Фотосессия в которой вы участвуете, была изменена"
+                };
+                im.Body = $"Фотосессия \"{ev.Name}\" была изменена! <p> Время начала: {ev.StartDate} </p>" +
+                    $"< p > Время конца: { ev.EndDate} </ p > " +
+                    $"\n <p>{ev.Description} </p>";
+                es.SendAsync(im);
+            }
             eventContext.SaveChanges();
 
             return Content(ev.EventId.ToString());
@@ -310,8 +336,9 @@ namespace EventsPlanner.Controllers
         public ActionResult DelEvent(int id)
         {
             string currentUser = User.Identity.GetUserId();
-
+            Event deletingEvent = eventContext.Events.Find(id);
             var createdEvents = userEventContext.UserEvents.Where(ue => ue.EventId == id).Where(ue => ue.CreatorId == currentUser).ToList();
+            
             if (createdEvents.Count == 0)
             {
                 userEventContext.UserEvents.Remove(
@@ -321,6 +348,25 @@ namespace EventsPlanner.Controllers
                 userEventContext.SaveChanges();
             }
             else {
+
+                var userEvents = userEventContext.UserEvents.Where(ue => ue.EventId == deletingEvent.EventId).Select(uv => uv);
+                foreach (var userInv in userEvents)
+                {
+                    if (userInv.UserId == User.Identity.GetUserId())
+                        continue;
+                    EmailService es = new EmailService();
+                    IdentityMessage im = new IdentityMessage()
+                    {
+                        Destination = UsersContext.Users.Find(userInv.UserId).Email,
+                        Subject = "Фотосессия в которой вы участвуете, была удалена"
+                    };
+                    im.Body = $"Фотосессия \"{deletingEvent.Name}\" была удалена! <p> Время начала: {deletingEvent.StartDate} </p>" +
+                        $"< p > Время конца: { deletingEvent.EndDate} </ p > " +
+                        $"\n <p>{deletingEvent.Description} </p>";
+                    es.SendAsync(im);
+                }
+
+
                 eventContext.Events.Remove(eventContext.Events.Find(id));
                 eventContext.SaveChanges();
             }

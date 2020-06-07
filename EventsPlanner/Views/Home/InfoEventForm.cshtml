@@ -85,7 +85,7 @@
         }
 
         <hr>
-        @if (ViewBag.CurrentUser != null && User.IsInRole("Photographer"))
+        @if ((ViewBag.CurrentUser != null && User.IsInRole("Photographer")) || User.IsInRole("Administrator"))
         {
             <button type="button" class="btn btn-primary"
                     onclick="GetEditEventForm(@ViewBag.Event.EventId)">

@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<EventsPlanner.Models.Event>
 
 @{
-    ViewBag.Title = "Events";
+    ViewBag.Title = "Фотосессии";
 }
 @section styles{
     @Styles.Render("~/Content/event-form.css")
@@ -44,7 +44,6 @@
       
 
         <table class="table" id="eventsTable">
-            <thead>
                 <tr>
                     <th style="display: none;">
                         ID
@@ -63,8 +62,6 @@
                     </th>
                     <th></th>
                 </tr>
-            </thead>
-            <tbody>
                 @foreach (var item in Model)
                  {
                     <tr>
@@ -96,7 +93,6 @@
                         </td>
                     </tr>
                  } 
-            </tbody>
         </table>
 
         <div id="eventsPageCalendar" style="height:600px; display:none;"></div>

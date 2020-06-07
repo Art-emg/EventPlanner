@@ -6,11 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     @{ if (@ViewBag.Title != null)
         {
-            <title>@ViewBag.Title - EventsPlanner</title>
+            <title>@ViewBag.Title - PhotoPlanner</title>
         }
         else
         {
-            <title>EventsPlanner</title>
+            <title>PhotoPlanner</title> 
         }
     }
     @Styles.Render("~/Content/css")
@@ -74,7 +74,7 @@
         <hr />
         <footer>
             <p class="form-inline" style="display:inline">
-                &copy; @DateTime.Now.Year - EventsPlanner
+                &copy; @DateTime.Now.Year - PhotoPlanner
                 by @Html.Raw("@")<a href="https://github.com/art-emg">art_emg</a>
             </p>
             <div class="form-check pull-right form-inline" style="display:inline">
