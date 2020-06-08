@@ -15,9 +15,11 @@ namespace EventsPlanner.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        ApplicationDbContext UsersContext = new ApplicationDbContext();
 
         public ManageController()
         {
+
         }
 
         public ManageController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
@@ -72,6 +74,7 @@ namespace EventsPlanner.Controllers
                 Logins = await UserManager.GetLoginsAsync(userId),
                 BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId)
             };
+            ViewBag.User = UsersContext.Users.Where(u => u.Id == userId).FirstOrDefault();
             return View(model);
         }
 
@@ -324,23 +327,46 @@ namespace EventsPlanner.Controllers
 
 
         // Смена типа аккаунта (фотограф/фотомодель)
+        [HttpGet]
+        public ActionResult ChengeUserType()
+        {
+            var userManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+
+            var user = UserManager.FindById(User.Identity.GetUserId());
+            if (user != null)
+            {
+                ApplicationUser appUser = UsersContext.Users.Where(u => u.Id == user.Id).FirstOrDefault();
+                if (user.UserType == "Photographer")
+                {
+                    userManager.RemoveFromRole(user.Id, "Photographer");
+                    userManager.AddToRole(user.Id, "Photomodel");
+                    appUser.UserType = "Photomodel";
+                }
+                else if (user.UserType == "Photomodel")
+                {
+                    userManager.RemoveFromRole(user.Id, "Photomodel");
+                    userManager.AddToRole(user.Id, "Photographer");
+                    appUser.UserType = "Photographer";
+                }
+                UsersContext.SaveChanges();
+                SignInManager.SignIn(user, isPersistent: false, rememberBrowser: false);
+            }
+            return RedirectToAction("Index", "Manage");
+        }
+
         [HttpPost]
-        public async Task<ActionResult> ChengeUserTypeAsync()
+        public async Task<ActionResult> OnOffNotification(bool OnNotofocation)
         {
 
             var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+
             if (user != null)
             {
-                //if (user.Roles.Contains("Photographer"))
-                //{
-
-                //}
-                //else if (user.Roles.Contains("Photomodel"))
-                //{
-
-                //}
+                ApplicationUser appUser = UsersContext.Users.Where(u => u.Id == user.Id).FirstOrDefault();
+                appUser.Notifications = OnNotofocation;
+                UsersContext.SaveChanges();
             }
-            return View("Index");
+            return RedirectToAction("Index", "Manage");
         }
 
 

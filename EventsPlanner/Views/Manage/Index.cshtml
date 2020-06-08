@@ -30,12 +30,12 @@
             @if (User.IsInRole("Photographer"))
             {
                 <Text> Фотограф <span style="padding-left:3px;padding-bottom:-10px;font-size:17px" class="glyphicon glyphicon-camera"></span>
-                [@Html.ActionLink("Переключится на профиль фотомодели", "#")]</Text>
+                [@Html.ActionLink("Переключится на профиль фотомодели", "ChengeUserType")]</Text>
             }
             else
             {
                 <Text> Фотомодель <span style="padding-left:3px;padding-bottom:-10px;font-size:17px" class="glyphicon glyphicon-user"></span>
-                    [@Html.ActionLink("Переключится на профиль фотографа", "#")
+                    [@Html.ActionLink("Переключится на профиль фотографа", "ChengeUserType")]
                 </Text>}
             </dd>
 
@@ -44,7 +44,8 @@
         <dt>E-mail оповещения:</dt>
         <dd>
                <div class="material-switch" style="display:inline-block">
-                    <input id="notifocationCheck"" type="checkbox"checked />
+
+                    <input id="notifocationCheck" type="checkbox" @if(ViewBag.User.Notifications){<Text>checked</Text>}/>
                     <label for="notifocationCheck" class="label-default"></label>
                 </div>
 
@@ -111,3 +112,17 @@
         </dd>*@
     </dl>
 </div>
+<script>
+    $(document).ready(function () {
+        $('#notifocationCheck').click(function () {
+            var OnNotification = $('#notifocationCheck')[0].checked;
+            $.ajax({
+                url: '/Manage/OnOffNotification?OnNotofocation=' + OnNotification,
+                type: 'post',
+                success: function (data) {
+                    //  ... do something with the data...
+                }
+            });
+        });
+    });
+</script>

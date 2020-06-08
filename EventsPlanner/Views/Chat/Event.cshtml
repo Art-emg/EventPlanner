@@ -8,7 +8,10 @@
 }
 
 <style>
-    table{width:100%}
+    table {
+        width: 100%
+    }
+
     thead, tbody {
         display: block;
         width: 100%
@@ -25,11 +28,14 @@
     }
 </style>
 <h2>@ViewBag.Title</h2>
-<div class="row" >
+<div class="row">
     <div class="col-md-10">
         <table class="table">
             <thead>
                 <tr>
+                    <th style="display:none">
+                        ID
+                    </th>
                     <th style="width:100px">
                         Отправил
                     </th>
@@ -45,6 +51,9 @@
                 @foreach (var item in Model)
                 {
                     <tr>
+                        <td style="display:none">
+                            @item.MessageId
+                        </td>
                         <td style="width:100px">
                             @ViewBag.Users[item.UserId]
                         </td>
@@ -81,13 +90,46 @@
     </div>
 </div>
 <div class="row">
-    <form action="/Chat/SendMessage" method="post">
+    <form id="messageForm" action="/Chat/SendMessage" method="post">
         <div class="col-md-10">
-            <textarea style="max-width:1300px;width:100%" name="TextMessage"></textarea>
+            <textarea style="max-width:93%;min-width:93%; min-height:60px" id="textMessageTextArea" name="TextMessage"></textarea>
+            <input id="sendMessageButton" type="image" src="https://img.icons8.com/nolan/64/send.png"  value="Отправить" style="width:60px" alt="Отправить сообщение" />
         </div>
         <div class="col-md-2">
-            <input type="submit" value="Отправить" style="width:100%" />
+
         </div>
         <input type="hidden" name="EventId" value="@ViewBag.EventId" />
     </form>
 </div>
+<script>
+    $(document).ready(function () {
+
+
+
+
+
+        $("#messageForm").submit(function (e) {
+
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+
+            var form = $(this);
+            var url = form.attr('action');
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: form.serialize(), // serializes the form's elements.
+                success: function (data) {
+                    $("tbody").append(data);
+                    $("#textMessageTextArea").val("");
+                    var block = document.getElementsByTagName("tbody")[0];
+                    block.scrollTop = block.scrollHeight;
+                }
+            });
+
+
+        });
+    });
+
+
+</script>

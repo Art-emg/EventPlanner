@@ -19,9 +19,15 @@ namespace EventsPlanner.Controllers
         public ActionResult Index()
         {
             string currentUser = User.Identity.GetUserId();
-            IEnumerable<Event> userEvents = userEventContext.UserEvents
+            List<Event> userEvents = userEventContext.UserEvents
                                              .Where(us => us.UserId == currentUser)
-                                             .Select(us => us.Event).Distinct();
+                                             .Select(us => us.Event).Distinct().ToList();
+
+            foreach(Event userEvent in userEvents.ToArray())
+            {
+                if (userEventContext.UserEvents.Where(ue => ue.EventId == userEvent.EventId).Select(ue => ue).Count() < 2)
+                    userEvents.Remove(userEvent);
+            }
 
             return View(userEvents);
         }
@@ -50,12 +56,41 @@ namespace EventsPlanner.Controllers
         }
 
         [HttpPost]
-        public ActionResult SendMessage(int EventId, string TextMessage)
+        public string SendMessage(int EventId, string TextMessage)
         {
+            if (string.IsNullOrWhiteSpace(TextMessage))
+                return "";
+
             Message message = new Message() { MessageDateTime = DateTime.Now, MessageText = TextMessage, EventId = EventId, UserId = User.Identity.GetUserId() };
             messageContext.Messages.Add(message);
             messageContext.SaveChanges();
-            return RedirectToAction("Event/" + EventId);
+            return $"<tr> " +
+                        $"<td style='display: none'>{message.MessageId}</td>" +
+                        $"<td style='width:100px'>{UsersContext.Users.Find(message.UserId).UserName}</td>" +
+                        $"<td style='width:170px'>{message.MessageDateTime}</td>" +
+                        $"<td>{message.MessageText}</td>" +
+                    $"<tr>";
+        }
+
+        [HttpGet]
+        public string GetLastMessages(int EventId, int lastMessageId)
+        {
+            List<Message> eventMessages = messageContext.Messages.Where(m => m.EventId == EventId && m.MessageId> lastMessageId).Select(m => m).ToList();
+
+            string returnString = "";
+            
+            foreach(Message message in eventMessages)
+            {
+                returnString += $"<tr> " +
+                        $"<td style='display: none'>{message.MessageId}</td>" +
+                        $"<td style='width:100px'>{UsersContext.Users.Find(message.UserId).UserName}</td>" +
+                        $"<td style='width:170px'>{message.MessageDateTime}</td>" +
+                        $"<td>{message.MessageText}</td>" +
+                    $"<tr>";
+            }
+
+
+            return returnString;
         }
     }
 }
